@@ -1,8 +1,13 @@
 package com.anbang.qipai.doudizhu.cqrs.c.domain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.qiangdizhu.CannotQiangdizhuException;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.qiangdizhu.QiangdizhuDizhuDeterminer;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.dml.doudizhu.ju.Ju;
@@ -26,8 +31,13 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	private int renshu;
 	private boolean qxp;// 去小牌
 	private Ju ju;
+	private Map<String, Integer> playeTotalScoreMap = new HashMap<>();
 
-	public void qiangdizhu(String playerId, boolean qiang) throws Exception {
+	public QiangdizhuResult qiangdizhu(String playerId, boolean qiang, long currentTime) throws Exception {
+		if (!state.name().equals(Qiangdizhu.name)) {
+			throw new CannotQiangdizhuException();
+		}
+		QiangdizhuResult result = new QiangdizhuResult();
 		Pan currentPan = ju.getCurrentPan();
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
 		String dizhu = qiangdizhuDizhuDeterminer.determineToDizhu(ju, playerId, qiang);
@@ -35,7 +45,11 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 			currentPan.setDizhuPlayerId(dizhu);
 			state = new Playing();
 			updateAllPlayersState(new PlayerPlaying());
+			ju.startPlaying(currentTime);
 		}
+		result.setPukeGame(new PukeGameValueObject(this));
+		result.setPlayerQiangdizhuMap(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
+		return result;
 	}
 
 	public PanActionFrame createJuAndStartFirstPan(long startTime) throws Exception {
@@ -47,7 +61,10 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		ju.setLuanPaiStrategyForNextPan(new RandomLuanPaiStrategy());
 		ju.setFaPaiStrategyForFirstPan(new OnePlayerOnePaiFaPaiStrategy());
 		ju.setFaPaiStrategyForNextPan(new OnePlayerOnePaiFaPaiStrategy());
-		ju.setDizhuDeterminer(new QiangdizhuDizhuDeterminer());
+		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = new QiangdizhuDizhuDeterminer();
+		qiangdizhuDizhuDeterminer.setRenshu(renshu);
+		qiangdizhuDizhuDeterminer.init(ju);
+		ju.setDizhuDeterminer(qiangdizhuDizhuDeterminer);
 		ju.setMenfengDeterminerForFirstPan(new RandomMenfengDeterminer());
 		ju.setMenfengDeterminerForNextPan(new RandomMenfengDeterminer());
 		ju.setXiandaDeterminerForFirstPan(new DizhuXiandaDeterminer());
@@ -69,7 +86,6 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	public PukeActionResult da(String playerId, List<Integer> paiIds, String dianshuZuheIdx, long actionTime)
 			throws Exception {
 		PanActionFrame panActionFrame = ju.da(playerId, paiIds, dianshuZuheIdx, actionTime);
-
 		PukeActionResult result = new PukeActionResult();
 		result.setPanActionFrame(panActionFrame);
 		return result;
@@ -86,6 +102,10 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		}
 		result.setPukeGame(new PukeGameValueObject(this));
 		return result;
+	}
+
+	public PanActionFrame findFirstPanActionFrame() {
+		return ju.getCurrentPan().findLatestActionFrame();
 	}
 
 	@Override
@@ -185,6 +205,14 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 
 	public void setJu(Ju ju) {
 		this.ju = ju;
+	}
+
+	public Map<String, Integer> getPlayeTotalScoreMap() {
+		return playeTotalScoreMap;
+	}
+
+	public void setPlayeTotalScoreMap(Map<String, Integer> playeTotalScoreMap) {
+		this.playeTotalScoreMap = playeTotalScoreMap;
 	}
 
 }

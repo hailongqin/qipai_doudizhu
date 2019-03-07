@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGame;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyForGameResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
+import com.dml.doudizhu.pan.PanActionFrame;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Game;
 import com.dml.mpgame.game.GameValueObject;
@@ -137,6 +139,11 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		PukeGameValueObject pukeGameValueObject = gameServer.ready(playerId, currentTime);
 		result.setPukeGame(pukeGameValueObject);
+		if (pukeGameValueObject.getState().name().equals(Qiangdizhu.name)) {
+			PukeGame pukeGame = (PukeGame) gameServer.findGamePlayerPlaying(playerId);
+			PanActionFrame firstActionFrame = pukeGame.findFirstPanActionFrame();
+			result.setFirstActionFrame(firstActionFrame);
+		}
 		return result;
 	}
 

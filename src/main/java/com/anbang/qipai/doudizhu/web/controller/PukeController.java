@@ -4,31 +4,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
-import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.QiangdizhuInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukeGameQueryService;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukePlayQueryService;
 import com.anbang.qipai.doudizhu.web.vo.CommonVO;
 import com.anbang.qipai.doudizhu.web.vo.JuResultVO;
 import com.anbang.qipai.doudizhu.web.vo.PanActionFrameVO;
 import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
+import com.anbang.qipai.doudizhu.web.vo.QiangdizhuInfoVO;
 import com.anbang.qipai.doudizhu.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.doudizhu.websocket.QueryScope;
 import com.dml.doudizhu.pan.PanActionFrame;
@@ -53,16 +53,10 @@ public class PukeController {
 	@Autowired
 	private GamePlayWsNotifier wsNotifier;
 
-	@Autowired
-	private GameCmdService gameCmdService;
-
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 当前盘我应该看到的所有信息
-	 * 
-	 * @param token
-	 * @return
 	 */
 	@RequestMapping(value = "/pan_action_frame_for_me")
 	@ResponseBody
@@ -118,6 +112,61 @@ public class PukeController {
 		PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
 		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
 		data.put("juResult", new JuResultVO());
+		return vo;
+	}
+
+	@RequestMapping(value = "/qiangdizhu_info")
+	@ResponseBody
+	public CommonVO qiangdizhuInfo(String gameId, int panNo) {
+		CommonVO vo = new CommonVO();
+		QiangdizhuInfoDbo info = pukePlayQueryService.findQiangdizhuInfoDboByGameIdAndPanNo(gameId, panNo);
+		Map data = new HashMap();
+		vo.setData(data);
+		data.put("info", new QiangdizhuInfoVO(info));
+		return vo;
+	}
+
+	@RequestMapping(value = "/qiangdizhu")
+	@ResponseBody
+	public CommonVO qiangdizhu(String token, boolean qiang) {
+		CommonVO vo = new CommonVO();
+		String playerId = playerAuthService.getPlayerIdByToken(token);
+		if (playerId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Map data = new HashMap();
+		List<String> queryScopes = new ArrayList<>();
+		data.put("queryScopes", queryScopes);
+		vo.setData(data);
+		QiangdizhuResult qiangdizhuResult;
+		try {
+			qiangdizhuResult = pukePlayCmdService.qiangdizhu(playerId, qiang, System.currentTimeMillis());
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg(e.getClass().getName());
+			return vo;
+		}
+		try {
+			pukePlayQueryService.qiangdizhu(qiangdizhuResult);
+		} catch (Throwable e) {
+			vo.setSuccess(false);
+			vo.setMsg(e.getMessage());
+			return vo;
+		}
+		// 通知其他人
+		for (String otherPlayerId : qiangdizhuResult.getPukeGame().allPlayerIds()) {
+			if (!otherPlayerId.equals(playerId)) {
+				wsNotifier.notifyToQuery(otherPlayerId,
+						QueryScope.scopesForState(qiangdizhuResult.getPukeGame().getState(),
+								qiangdizhuResult.getPukeGame().findPlayerState(otherPlayerId)));
+			}
+		}
+		queryScopes.add(QueryScope.qiangdizhuInfo.name());
+		if (qiangdizhuResult.getPukeGame().getState().name().equals(Playing.name)) {
+			queryScopes.add(QueryScope.panForMe.name());
+		}
 		return vo;
 	}
 
@@ -193,8 +242,6 @@ public class PukeController {
 			}
 		}
 
-		hintWatcher(pukeActionResult.getPukeGame().getId(), endFlag);
-
 		long endTime = System.currentTimeMillis();
 		logger.info("action:da," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "paiIds:" + paiIds
 				+ "," + "dianshuZuheIdx:" + dianshuZuheIdx + "," + "success:" + vo.isSuccess() + ",msg:" + vo.getMsg()
@@ -258,8 +305,6 @@ public class PukeController {
 			}
 		}
 
-		hintWatcher(pukeActionResult.getPukeGame().getId(), "query");
-
 		long endTime = System.currentTimeMillis();
 		logger.info("action:guo," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "success:"
 				+ vo.isSuccess() + ",msg:" + vo.getMsg() + "," + "endTime:" + endTime + "," + "use:"
@@ -316,13 +361,4 @@ public class PukeController {
 		return vo;
 	}
 
-	/**
-	 * 通知观战者
-	 */
-	private void hintWatcher(String gameId, String flag) {
-		Map<String, Object> map = gameCmdService.getwatch(gameId);
-		if (!CollectionUtils.isEmpty(map)) {
-			List<String> playerIds = map.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
-		}
-	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGame;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
 import com.dml.mpgame.game.player.PlayerNotInGameException;
@@ -57,11 +58,22 @@ public class PukePlayCmdServiceImpl extends CmdServiceBase implements PukePlayCm
 		if (gameId == null) {
 			throw new PlayerNotInGameException();
 		}
-
 		PukeGame pukeGame = (PukeGame) gameServer.findGame(gameId);
 		PukeActionResult pukeActionResult = pukeGame.guo(playerId, actionTime);
 
 		return pukeActionResult;
+	}
+
+	@Override
+	public QiangdizhuResult qiangdizhu(String playerId, Boolean qiang, Long currentTime) throws Exception {
+		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
+		String gameId = gameServer.findBindGameId(playerId);
+		if (gameId == null) {
+			throw new PlayerNotInGameException();
+		}
+		PukeGame pukeGame = (PukeGame) gameServer.findGame(gameId);
+		QiangdizhuResult result = pukeGame.qiangdizhu(playerId, qiang, currentTime);
+		return result;
 	}
 
 }

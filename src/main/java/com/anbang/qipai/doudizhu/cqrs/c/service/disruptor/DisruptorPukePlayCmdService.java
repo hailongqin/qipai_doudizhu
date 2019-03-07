@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.impl.PukePlayCmdServiceImpl;
@@ -55,6 +56,22 @@ public class DisruptorPukePlayCmdService extends DisruptorCmdServiceBase impleme
 		DeferredResult<PukeActionResult> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
 			PukeActionResult pukeActionResult = pukePlayCmdServiceImpl.guo(cmd.getParameter(), cmd.getParameter());
 			return pukeActionResult;
+		});
+		try {
+			return result.getResult();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public QiangdizhuResult qiangdizhu(String playerId, Boolean qiang, Long currentTime) throws Exception {
+		CommonCommand cmd = new CommonCommand(PukePlayCmdServiceImpl.class.getName(), "qiangdizhu", playerId, qiang,
+				currentTime);
+		DeferredResult<QiangdizhuResult> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
+			QiangdizhuResult qiangdizhuResult = pukePlayCmdServiceImpl.qiangdizhu(cmd.getParameter(),
+					cmd.getParameter(), cmd.getParameter());
+			return qiangdizhuResult;
 		});
 		try {
 			return result.getResult();

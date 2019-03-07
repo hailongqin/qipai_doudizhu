@@ -1,4 +1,4 @@
-package com.anbang.qipai.doudizhu.cqrs.c.domain;
+package com.anbang.qipai.doudizhu.cqrs.c.domain.qiangdizhu;
 
 public class CannotQiangdizhuException extends Exception {
 
