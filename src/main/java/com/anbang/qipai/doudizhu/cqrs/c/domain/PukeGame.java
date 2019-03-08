@@ -10,6 +10,8 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
+import com.dml.doudizhu.gameprocess.FixedPanNumbersJuFinishiDeterminer;
+import com.dml.doudizhu.gameprocess.OnePlayerHasNoPaiPanFinishiDeterminer;
 import com.dml.doudizhu.ju.Ju;
 import com.dml.doudizhu.pan.Pan;
 import com.dml.doudizhu.pan.PanActionFrame;
@@ -17,6 +19,7 @@ import com.dml.doudizhu.preparedapai.avaliablepai.OneAvaliablePaiFiller;
 import com.dml.doudizhu.preparedapai.fapai.OnePlayerOnePaiFaPaiStrategy;
 import com.dml.doudizhu.preparedapai.lipai.DianshuOrPaishuShoupaiSortStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.RandomLuanPaiStrategy;
+import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.position.RandomMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.xianda.DizhuXiandaDeterminer;
 import com.dml.mpgame.game.GameValueObject;
@@ -25,6 +28,8 @@ import com.dml.mpgame.game.extend.fpmpv.FixedPlayersMultipanAndVotetofinishGame;
 import com.dml.mpgame.game.extend.vote.VoteNotPassWhenPlaying;
 import com.dml.mpgame.game.player.GamePlayer;
 import com.dml.mpgame.game.player.PlayerPlaying;
+import com.dml.puke.wanfa.dianshu.dianshuzu.comparator.NoZhadanDanGeDianShuZuComparator;
+import com.dml.puke.wanfa.dianshu.dianshuzu.comparator.TongDengLianXuDianShuZuComparator;
 
 public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	private int panshu;
@@ -54,28 +59,33 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 
 	public PanActionFrame createJuAndStartFirstPan(long startTime) throws Exception {
 		ju = new Ju();
-		ju.setPanFinishiDeterminer(new DoudizhuPanFinishiDeterminer());
-		ju.setJuFinishiDeterminer(new DoudizhuJuFinishiDeterminer());
+		ju.setPanFinishiDeterminer(new OnePlayerHasNoPaiPanFinishiDeterminer());
+		ju.setJuFinishiDeterminer(new FixedPanNumbersJuFinishiDeterminer(panshu));
 		ju.setAvaliablePaiFiller(new OneAvaliablePaiFiller());
-		ju.setLuanPaiStrategyForFirstPan(new RandomLuanPaiStrategy());
-		ju.setLuanPaiStrategyForNextPan(new RandomLuanPaiStrategy());
-		ju.setFaPaiStrategyForFirstPan(new OnePlayerOnePaiFaPaiStrategy());
-		ju.setFaPaiStrategyForNextPan(new OnePlayerOnePaiFaPaiStrategy());
+		ju.setLuanPaiStrategy(new RandomLuanPaiStrategy());
+		ju.setFaPaiStrategy(new OnePlayerOnePaiFaPaiStrategy());
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = new QiangdizhuDizhuDeterminer();
 		qiangdizhuDizhuDeterminer.setRenshu(renshu);
 		qiangdizhuDizhuDeterminer.init(ju);
 		ju.setDizhuDeterminer(qiangdizhuDizhuDeterminer);
 		ju.setMenfengDeterminerForFirstPan(new RandomMenfengDeterminer());
-		ju.setMenfengDeterminerForNextPan(new RandomMenfengDeterminer());
-		ju.setXiandaDeterminerForFirstPan(new DizhuXiandaDeterminer());
-		ju.setXiandaDeterminerForNextPan(new DizhuXiandaDeterminer());
+		ju.setMenfengDeterminerForNextPan(new NoChangeMenfengDeterminer());
+		ju.setXiandaDeterminer(new DizhuXiandaDeterminer());
 		ju.setShoupaiSortStrategy(new DianshuOrPaishuShoupaiSortStrategy());
 		ju.setWaihaoGenerator(new DoudizhuWaihaoGenerator());
 		ju.setCurrentPanResultBuilder(new DoudizhuCurrentPanResultBuilder());
 		ju.setJuResultBuilder(new DoudizhuJuResultBuilder());
 		ju.setAllKedaPaiSolutionsGenerator(new DoudizhuAllKedaPaiSolutionsGenerator());
-		ju.setDianShuZuYaPaiSolutionCalculator(new DoudizhuDianShuZuYaPaiSolutionCalculator());
-		ju.setZaDanYaPaiSolutionCalculator(new DoudizhuZaDanYaPaiSolutionCalculator());
+		DoudizhuDianShuZuYaPaiSolutionCalculator doudizhuDianShuZuYaPaiSolutionCalculator = new DoudizhuDianShuZuYaPaiSolutionCalculator();
+		doudizhuDianShuZuYaPaiSolutionCalculator.setDanGeDianShuZuComparator(new NoZhadanDanGeDianShuZuComparator());
+		doudizhuDianShuZuYaPaiSolutionCalculator.setLianXuDianShuZuComparator(new TongDengLianXuDianShuZuComparator());
+		doudizhuDianShuZuYaPaiSolutionCalculator
+				.setChibangDianShuZuComparator(new DoudizhuChibangDianShuZuComparator());
+		doudizhuDianShuZuYaPaiSolutionCalculator.setFeijiDianShuZuComparator(new DoudizhuFeijiDianShuZuComparator());
+		ju.setDianShuZuYaPaiSolutionCalculator(doudizhuDianShuZuYaPaiSolutionCalculator);
+		DoudizhuZaDanYaPaiSolutionCalculator doudizhuZaDanYaPaiSolutionCalculator = new DoudizhuZaDanYaPaiSolutionCalculator();
+		doudizhuZaDanYaPaiSolutionCalculator.setZhadanComparator(new DoudizhuZhadanComparator());
+		ju.setZaDanYaPaiSolutionCalculator(doudizhuZaDanYaPaiSolutionCalculator);
 		ju.setDaPaiSolutionsTipsFilter(new DoudizhuDaPaiSolutionsTipsFilter());
 		ju.setYaPaiSolutionsTipsFilter(new DoudizhuYaPaiSolutionsTipsFilter());
 
