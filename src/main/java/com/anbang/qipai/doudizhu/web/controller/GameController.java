@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,13 +17,18 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameFinishVoteDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGamePlayerDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukeGameQueryService;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukePlayQueryService;
+import com.anbang.qipai.doudizhu.msg.msjobj.PukeHistoricalJuResult;
+import com.anbang.qipai.doudizhu.msg.service.DoudizhuGameMsgService;
+import com.anbang.qipai.doudizhu.msg.service.DoudizhuResultMsgService;
+import com.anbang.qipai.doudizhu.msg.service.MemberGoldsMsgService;
+import com.anbang.qipai.doudizhu.msg.service.WiseCrackMsgServcie;
 import com.anbang.qipai.doudizhu.plan.bean.MemberGoldBalance;
 import com.anbang.qipai.doudizhu.plan.service.MemberGoldBalanceService;
-import com.anbang.qipai.doudizhu.plan.service.PlayerInfoService;
 import com.anbang.qipai.doudizhu.web.vo.CommonVO;
 import com.anbang.qipai.doudizhu.web.vo.GameFinishVoteVO;
 import com.anbang.qipai.doudizhu.web.vo.GameVO;
@@ -59,22 +62,30 @@ public class GameController {
 	private GamePlayWsNotifier wsNotifier;
 
 	@Autowired
+	private DoudizhuGameMsgService gameMsgService;
+
+	@Autowired
+	private DoudizhuResultMsgService doudizhuResultMsgService;
+
+	@Autowired
+	private WiseCrackMsgServcie wiseCrackMsgServcie;
+
+	@Autowired
 	private MemberGoldBalanceService memberGoldBalanceService;
 
 	@Autowired
-	private PlayerInfoService playerInfoService;
-
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private MemberGoldsMsgService memberGoldsMsgService;
 
 	/**
 	 * 新一局游戏
 	 */
 	@RequestMapping(value = "/newgame")
 	@ResponseBody
-	public CommonVO newgame(String playerId, int panshu, int renshu, boolean qxp) {
+	public CommonVO newgame(String playerId, int panshu, int renshu, boolean qxp, int difen) {
 		CommonVO vo = new CommonVO();
 		String newGameId = UUID.randomUUID().toString();
-		PukeGameValueObject pukeGameValueObject = gameCmdService.newPukeGame(newGameId, playerId, panshu, renshu, qxp);
+		PukeGameValueObject pukeGameValueObject = gameCmdService.newPukeGame(newGameId, playerId, panshu, renshu, qxp,
+				difen);
 		pukeGameQueryService.newPukeGame(pukeGameValueObject);
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		Map data = new HashMap();
@@ -89,11 +100,11 @@ public class GameController {
 	 */
 	@RequestMapping(value = "/newgame_leave_quit")
 	@ResponseBody
-	public CommonVO newgame_leave_quit(String playerId, int panshu, int renshu, boolean qxp) {
+	public CommonVO newgame_leave_quit(String playerId, int panshu, int renshu, boolean qxp, int difen) {
 		CommonVO vo = new CommonVO();
 		String newGameId = UUID.randomUUID().toString();
 		PukeGameValueObject pukeGameValueObject = gameCmdService.newPukeGameLeaveAndQuit(newGameId, playerId, panshu,
-				renshu, qxp);
+				renshu, qxp, difen);
 		pukeGameQueryService.newPukeGame(pukeGameValueObject);
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		Map data = new HashMap();
@@ -122,8 +133,11 @@ public class GameController {
 		// 通知其他玩家
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.scopesForState(pukeGameValueObject.getState(),
-						pukeGameValueObject.findPlayerState(otherPlayerId)));
+				GamePlayerOnlineState onlineState = pukeGameValueObject.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					wsNotifier.notifyToQuery(otherPlayerId, QueryScope.scopesForState(pukeGameValueObject.getState(),
+							pukeGameValueObject.findPlayerState(otherPlayerId)));
+				}
 			}
 		}
 		String token = playerAuthService.newSessionForPlayer(playerId);
@@ -161,17 +175,35 @@ public class GameController {
 		pukeGameQueryService.leaveGame(pukeGameValueObject);
 		// 断开玩家的socket
 		wsNotifier.closeSessionForPlayer(playerId);
+		String gameId = pukeGameValueObject.getId();
+		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+		// 记录战绩
+		if (juResultDbo != null) {
+			PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+			PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+			doudizhuResultMsgService.recordJuResult(juResult);
+		}
+		if (pukeGameValueObject.getState().name().equals(FinishedByVote.name)
+				|| pukeGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameFinished(gameId);
+		} else {
+			gameMsgService.gamePlayerLeave(pukeGameValueObject, playerId);
+
+		}
 		// 通知其他玩家
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
-						pukeGameValueObject.findPlayerState(otherPlayerId));
-				scopes.remove(QueryScope.panResult);
-				if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
-						|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
-					scopes.remove(QueryScope.gameFinishVote);
+				GamePlayerOnlineState onlineState = pukeGameValueObject.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
+							pukeGameValueObject.findPlayerState(otherPlayerId));
+					scopes.remove(QueryScope.panResult);
+					if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
+							|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
+						scopes.remove(QueryScope.gameFinishVote);
+					}
+					wsNotifier.notifyToQuery(otherPlayerId, scopes);
 				}
-				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		return vo;
@@ -205,19 +237,39 @@ public class GameController {
 		pukeGameQueryService.leaveGame(pukeGameValueObject);
 		// 断开玩家的socket
 		wsNotifier.closeSessionForPlayer(playerId);
+		String gameId = pukeGameValueObject.getId();
+		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+		// 记录战绩
+		if (juResultDbo != null) {
+			PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+			PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+			doudizhuResultMsgService.recordJuResult(juResult);
+		}
+		if (pukeGameValueObject.getState().name().equals(FinishedByVote.name)
+				|| pukeGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameFinished(gameId);
+		} else if (pukeGameValueObject.getState().name().equals(Finished.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
+		} else {
+			gameMsgService.gamePlayerLeave(pukeGameValueObject, playerId);
+
+		}
 		// 通知其他玩家
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
-						pukeGameValueObject.findPlayerState(otherPlayerId));
-				if (!pukeGameValueObject.getState().name().equals(Finished.name)) {
-					scopes.remove(QueryScope.panResult);
+				GamePlayerOnlineState onlineState = pukeGameValueObject.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
+							pukeGameValueObject.findPlayerState(otherPlayerId));
+					if (!pukeGameValueObject.getState().name().equals(Finished.name)) {
+						scopes.remove(QueryScope.panResult);
+					}
+					if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
+							|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
+						scopes.remove(QueryScope.gameFinishVote);
+					}
+					wsNotifier.notifyToQuery(otherPlayerId, scopes);
 				}
-				if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
-						|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
-					scopes.remove(QueryScope.gameFinishVote);
-				}
-				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		return vo;
@@ -255,14 +307,17 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
-						pukeGameValueObject.findPlayerState(otherPlayerId));
-				scopes.remove(QueryScope.panResult);
-				if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
-						|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
-					scopes.remove(QueryScope.gameFinishVote);
+				GamePlayerOnlineState onlineState = pukeGameValueObject.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					List<QueryScope> scopes = QueryScope.scopesForState(pukeGameValueObject.getState(),
+							pukeGameValueObject.findPlayerState(otherPlayerId));
+					scopes.remove(QueryScope.panResult);
+					if (pukeGameValueObject.getState().name().equals(VoteNotPassWhenPlaying.name)
+							|| pukeGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
+						scopes.remove(QueryScope.gameFinishVote);
+					}
+					wsNotifier.notifyToQuery(otherPlayerId, scopes);
 				}
-				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		String token = playerAuthService.newSessionForPlayer(playerId);
@@ -282,7 +337,7 @@ public class GameController {
 	public CommonVO info(String gameId) {
 		CommonVO vo = new CommonVO();
 		PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
-		GameVO gameVO = new GameVO();
+		GameVO gameVO = new GameVO(pukeGameDbo);
 		Map data = new HashMap();
 		data.put("game", gameVO);
 		vo.setData(data);
@@ -327,9 +382,13 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getPukeGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId,
-						QueryScope.scopesForState(readyForGameResult.getPukeGame().getState(),
-								readyForGameResult.getPukeGame().findPlayerState(otherPlayerId)));
+				GamePlayerOnlineState onlineState = readyForGameResult.getPukeGame()
+						.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					wsNotifier.notifyToQuery(otherPlayerId,
+							QueryScope.scopesForState(readyForGameResult.getPukeGame().getState(),
+									readyForGameResult.getPukeGame().findPlayerState(otherPlayerId)));
+				}
 			}
 		}
 
@@ -380,9 +439,13 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getPukeGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId,
-						QueryScope.scopesForState(readyForGameResult.getPukeGame().getState(),
-								readyForGameResult.getPukeGame().findPlayerState(otherPlayerId)));
+				GamePlayerOnlineState onlineState = readyForGameResult.getPukeGame()
+						.findPlayerOnlineState(otherPlayerId);
+				if (onlineState.equals(GamePlayerOnlineState.online)) {
+					wsNotifier.notifyToQuery(otherPlayerId,
+							QueryScope.scopesForState(readyForGameResult.getPukeGame().getState(),
+									readyForGameResult.getPukeGame().findPlayerState(otherPlayerId)));
+				}
 			}
 		}
 
@@ -414,7 +477,14 @@ public class GameController {
 			return vo;
 		}
 		pukeGameQueryService.finish(pukeGameValueObject);
-
+		String gameId = pukeGameValueObject.getId();
+		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+		// 记录战绩
+		if (juResultDbo != null) {
+			PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+			PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+			doudizhuResultMsgService.recordJuResult(juResult);
+		}
 		if (pukeGameValueObject.getState().name().equals(FinishedByVote.name)
 				|| pukeGameValueObject.getState().name().equals(Canceled.name)) {
 			data.put("queryScope", QueryScope.gameInfo);
@@ -424,7 +494,7 @@ public class GameController {
 				data.put("queryScope", QueryScope.gameFinishVote);
 			} else {
 				data.put("queryScope", null);
-
+				gameMsgService.gamePlayerLeave(pukeGameValueObject, playerId);
 			}
 		}
 
@@ -464,6 +534,18 @@ public class GameController {
 			return vo;
 		}
 		pukeGameQueryService.voteToFinish(pukeGameValueObject);
+		String gameId = pukeGameValueObject.getId();
+		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+		// 记录战绩
+		if (juResultDbo != null) {
+			PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+			PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+			doudizhuResultMsgService.recordJuResult(juResult);
+		}
+		if (pukeGameValueObject.getState().name().equals(FinishedByVote.name)
+				|| pukeGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameFinished(gameId);
+		}
 		data.put("queryScope", QueryScope.gameFinishVote);
 		// 通知其他人来查询投票情况
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
@@ -505,6 +587,18 @@ public class GameController {
 			return vo;
 		}
 		pukeGameQueryService.voteToFinish(pukeGameValueObject);
+		String gameId = pukeGameValueObject.getId();
+		JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+		// 记录战绩
+		if (juResultDbo != null) {
+			PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+			PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+			doudizhuResultMsgService.recordJuResult(juResult);
+		}
+		if (pukeGameValueObject.getState().name().equals(FinishedByVote.name)
+				|| pukeGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameFinished(gameId);
+		}
 		data.put("queryScope", QueryScope.gameFinishVote);
 		// 通知其他人来查询投票情况
 		for (String otherPlayerId : pukeGameValueObject.allPlayerIds()) {
@@ -551,17 +645,20 @@ public class GameController {
 					wsNotifier.notifyToListenWisecrack(otherPlayer.getPlayerId(), ordinal, playerId);
 				}
 			}
+			wiseCrackMsgServcie.wisecrack(playerId);
 			vo.setSuccess(true);
 			return vo;
 		}
 		MemberGoldBalance account = memberGoldBalanceService.findByMemberId(playerId);
 		if (account.getBalanceAfter() > 10) {
+			memberGoldsMsgService.withdraw(playerId, 10, "wisecrack");
 			// 通知其他人
 			for (PukeGamePlayerDbo otherPlayer : pukeGameDbo.getPlayers()) {
 				if (!otherPlayer.getPlayerId().equals(playerId)) {
 					wsNotifier.notifyToListenWisecrack(otherPlayer.getPlayerId(), ordinal, playerId);
 				}
 			}
+			wiseCrackMsgServcie.wisecrack(playerId);
 			vo.setSuccess(true);
 			return vo;
 		}

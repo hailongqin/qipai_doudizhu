@@ -8,10 +8,11 @@ import com.dml.mpgame.game.GameValueObject;
 
 public interface GameCmdService {
 
-	PukeGameValueObject newPukeGame(String gameId, String playerId, Integer panshu, Integer renshu, Boolean qxp);
+	PukeGameValueObject newPukeGame(String gameId, String playerId, Integer panshu, Integer renshu, Boolean qxp,
+			Integer difen);
 
 	PukeGameValueObject newPukeGameLeaveAndQuit(String gameId, String playerId, Integer panshu, Integer renshu,
-			Boolean qxp);
+			Boolean qxp, Integer difen);
 
 	PukeGameValueObject joinGame(String playerId, String gameId) throws Exception;
 

@@ -13,9 +13,89 @@ spring:
           autoCreateTopics: true
           autoAddPartitions: false
         bindings:
-          
+          memberGoldsAccounting:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          doudizhuGame:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          doudizhuResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          wisecrack:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+
       bindings:
-        
+        memberGoldsAccounting:
+          destination: memberGoldsAccounting
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        doudizhuGame:
+          destination: doudizhuGame
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        doudizhuResult:
+          destination: doudizhuResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        members:
+          destination: members
+          group: qipai-doudizhu
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        memberGolds:
+          destination: memberGolds
+          group: qipai-doudizhu
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        doudizhuGameRoom:
+          destination: doudizhuGameRoom
+          group: qipai-doudizhu
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        wisecrack:
+          destination: wisecrack
+          contentType: application/json
+          producer:
+            partitionCount: 1
       
 server:
   port: 2006

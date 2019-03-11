@@ -14,6 +14,7 @@ public class PukeGameDbo {
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
+	private int difen;
 	private GameState state;// 原来是 waitingStart, playing, waitingNextPan, finished
 	private int panNo;
 	private List<PukeGamePlayerDbo> players;
@@ -27,10 +28,11 @@ public class PukeGameDbo {
 		panshu = pukeGame.getPanshu();
 		renshu = pukeGame.getRenshu();
 		qxp = pukeGame.isQxp();
+		difen = pukeGame.getDifen();
 		state = pukeGame.getState();
 		panNo = pukeGame.getPanNo();
 		players = new ArrayList<>();
-		Map<String, Integer> playeTotalScoreMap = pukeGame.getPlayeTotalScoreMap();
+		Map<String, Integer> playerTotalScoreMap = pukeGame.getPlayerTotalScoreMap();
 		for (GamePlayerValueObject playerValueObject : pukeGame.getPlayers()) {
 			String playerId = playerValueObject.getId();
 			PlayerInfo playerInfo = playerInfoMap.get(playerId);
@@ -41,11 +43,20 @@ public class PukeGameDbo {
 			playerDbo.setOnlineState(playerValueObject.getOnlineState());
 			playerDbo.setPlayerId(playerId);
 			playerDbo.setState(playerValueObject.getState());
-			if (playeTotalScoreMap.get(playerId) != null) {
-				playerDbo.setTotalScore(playeTotalScoreMap.get(playerId));
+			if (playerTotalScoreMap.get(playerId) != null) {
+				playerDbo.setTotalScore(playerTotalScoreMap.get(playerId));
 			}
 			players.add(playerDbo);
 		}
+	}
+
+	public PukeGamePlayerDbo findPlayer(String playerId) {
+		for (PukeGamePlayerDbo player : players) {
+			if (player.getPlayerId().equals(playerId)) {
+				return player;
+			}
+		}
+		return null;
 	}
 
 	public String getId() {
@@ -102,6 +113,14 @@ public class PukeGameDbo {
 
 	public void setQxp(boolean qxp) {
 		this.qxp = qxp;
+	}
+
+	public int getDifen() {
+		return difen;
+	}
+
+	public void setDifen(int difen) {
+		this.difen = difen;
 	}
 
 }

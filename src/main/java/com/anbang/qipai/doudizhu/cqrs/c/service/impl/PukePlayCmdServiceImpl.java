@@ -9,7 +9,9 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
+import com.dml.doudizhu.pan.PanActionFrame;
 import com.dml.mpgame.game.player.PlayerNotInGameException;
 import com.dml.mpgame.server.GameServer;
 
@@ -46,7 +48,10 @@ public class PukePlayCmdServiceImpl extends CmdServiceBase implements PukePlayCm
 
 		ReadyToNextPanResult readyToNextPanResult = new ReadyToNextPanResult();
 		pukeGame.readyToNextPan(playerId);
-
+		if (pukeGame.getState().name().equals(Qiangdizhu.name)) {// 开始下一盘了
+			PanActionFrame firstActionFrame = pukeGame.getJu().getCurrentPan().findLatestActionFrame();
+			readyToNextPanResult.setFirstActionFrame(firstActionFrame);
+		}
 		readyToNextPanResult.setPukeGame(new PukeGameValueObject(pukeGame));
 		return readyToNextPanResult;
 	}
@@ -60,7 +65,6 @@ public class PukePlayCmdServiceImpl extends CmdServiceBase implements PukePlayCm
 		}
 		PukeGame pukeGame = (PukeGame) gameServer.findGame(gameId);
 		PukeActionResult pukeActionResult = pukeGame.guo(playerId, actionTime);
-
 		return pukeActionResult;
 	}
 

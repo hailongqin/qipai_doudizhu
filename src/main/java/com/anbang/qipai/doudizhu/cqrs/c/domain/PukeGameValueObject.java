@@ -11,7 +11,8 @@ public class PukeGameValueObject extends FixedPlayersMultipanAndVotetofinishGame
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
-	private Map<String, Integer> playeTotalScoreMap = new HashMap<>();
+	private int difen;
+	private Map<String, Integer> playerTotalScoreMap = new HashMap<>();
 	private JuResult juResult;
 
 	public PukeGameValueObject(PukeGame pukeGame) {
@@ -19,10 +20,19 @@ public class PukeGameValueObject extends FixedPlayersMultipanAndVotetofinishGame
 		panshu = pukeGame.getPanshu();
 		renshu = pukeGame.getRenshu();
 		qxp = pukeGame.isQxp();
-		playeTotalScoreMap.putAll(pukeGame.getPlayeTotalScoreMap());
+		difen = pukeGame.getDifen();
+		playerTotalScoreMap.putAll(pukeGame.getPlayerTotalScoreMap());
 		if (pukeGame.getJu() != null) {
 			juResult = pukeGame.getJu().getJuResult();
 		}
+	}
+
+	public int getDifen() {
+		return difen;
+	}
+
+	public void setDifen(int difen) {
+		this.difen = difen;
 	}
 
 	public JuResult getJuResult() {
@@ -57,12 +67,12 @@ public class PukeGameValueObject extends FixedPlayersMultipanAndVotetofinishGame
 		this.qxp = qxp;
 	}
 
-	public Map<String, Integer> getPlayeTotalScoreMap() {
-		return playeTotalScoreMap;
+	public Map<String, Integer> getPlayerTotalScoreMap() {
+		return playerTotalScoreMap;
 	}
 
-	public void setPlayeTotalScoreMap(Map<String, Integer> playeTotalScoreMap) {
-		this.playeTotalScoreMap = playeTotalScoreMap;
+	public void setPlayerTotalScoreMap(Map<String, Integer> playerTotalScoreMap) {
+		this.playerTotalScoreMap = playerTotalScoreMap;
 	}
 
 }

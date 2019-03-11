@@ -1,15 +1,48 @@
 package com.anbang.qipai.doudizhu.cqrs.c.domain.result;
 
-import com.dml.doudizhu.ju.Ju;
+import java.util.List;
+
 import com.dml.doudizhu.ju.JuResult;
-import com.dml.doudizhu.ju.JuResultBuilder;
 
-public class DoudizhuJuResult implements JuResultBuilder {
+public class DoudizhuJuResult implements JuResult {
+	private int finishedPanCount;
 
-	@Override
-	public JuResult buildJuResult(Ju ju) {
-		// TODO Auto-generated method stub
-		return null;
+	private List<DoudizhuJuPlayerResult> playerResultList;
+
+	private String dayingjiaId;
+
+	private String datuhaoId;
+
+	public int getFinishedPanCount() {
+		return finishedPanCount;
+	}
+
+	public void setFinishedPanCount(int finishedPanCount) {
+		this.finishedPanCount = finishedPanCount;
+	}
+
+	public List<DoudizhuJuPlayerResult> getPlayerResultList() {
+		return playerResultList;
+	}
+
+	public void setPlayerResultList(List<DoudizhuJuPlayerResult> playerResultList) {
+		this.playerResultList = playerResultList;
+	}
+
+	public String getDayingjiaId() {
+		return dayingjiaId;
+	}
+
+	public void setDayingjiaId(String dayingjiaId) {
+		this.dayingjiaId = dayingjiaId;
+	}
+
+	public String getDatuhaoId() {
+		return datuhaoId;
+	}
+
+	public void setDatuhaoId(String datuhaoId) {
+		this.datuhaoId = datuhaoId;
 	}
 
 }

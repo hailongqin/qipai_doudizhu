@@ -1,10 +1,12 @@
 package com.anbang.qipai.doudizhu.cqrs.c.domain.result;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.dml.doudizhu.pan.PanActionFrame;
 
 public class PukeActionResult {
 	private PukeGameValueObject pukeGame;
+	private GameInfo gameInfo;
 	private PanActionFrame panActionFrame;
 	private DoudizhuPanResult panResult;
 	private DoudizhuJuResult juResult;
@@ -15,6 +17,14 @@ public class PukeActionResult {
 
 	public void setPukeGame(PukeGameValueObject pukeGame) {
 		this.pukeGame = pukeGame;
+	}
+
+	public GameInfo getGameInfo() {
+		return gameInfo;
+	}
+
+	public void setGameInfo(GameInfo gameInfo) {
+		this.gameInfo = gameInfo;
 	}
 
 	public PanActionFrame getPanActionFrame() {

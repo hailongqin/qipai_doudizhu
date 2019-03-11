@@ -21,11 +21,13 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 	private int renshu;
 	private Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
 	private Node node;
+	private Node root;
+	private int qiangdizhuCount;
 
 	public void init(Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		for (String pid : currentPan.sortedPlayerIdList()) {
-			if (currentPan.findPlayer(pid).getPosition().equals(Position.dong)) {
+			if (currentPan.findPlayerById(pid).getPosition().equals(Position.dong)) {
 				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startJiaodizhu);
 			} else {
 				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForJiaodizhu);
@@ -143,6 +145,19 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 
 		}
 		node = root;
+		this.root = root;
+	}
+
+	public void reset(Ju ju) {
+		Pan currentPan = ju.getCurrentPan();
+		for (String pid : currentPan.sortedPlayerIdList()) {
+			if (currentPan.findPlayerById(pid).getPosition().equals(Position.dong)) {
+				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startJiaodizhu);
+			} else {
+				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForJiaodizhu);
+			}
+		}
+		node = root;
 	}
 
 	@Override
@@ -157,6 +172,9 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			throw new CannotQiangdizhuException();
 		}
 		node = newNode;
+		if (qiang) {
+			qiangdizhuCount++;
+		}
 		Pan currentPan = ju.getCurrentPan();
 		String nextPlayerId = null;
 		Position nextPosition = currentPan.findPlayerPosition(playerId);
@@ -208,6 +226,22 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 
 	public void setNode(Node node) {
 		this.node = node;
+	}
+
+	public Node getRoot() {
+		return root;
+	}
+
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+
+	public int getQiangdizhuCount() {
+		return qiangdizhuCount;
+	}
+
+	public void setQiangdizhuCount(int qiangdizhuCount) {
+		this.qiangdizhuCount = qiangdizhuCount;
 	}
 
 }

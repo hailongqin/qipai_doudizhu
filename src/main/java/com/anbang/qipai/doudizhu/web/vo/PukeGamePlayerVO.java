@@ -1,6 +1,24 @@
 package com.anbang.qipai.doudizhu.web.vo;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerAfterQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerVotedWhenAfterQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerVotedWhenQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerVotingWhenAfterQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerVotingWhenQiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGamePlayerDbo;
+import com.dml.mpgame.game.extend.fpmpv.player.PlayerPanFinishedAndVoted;
+import com.dml.mpgame.game.extend.fpmpv.player.PlayerPanFinishedAndVoting;
+import com.dml.mpgame.game.extend.fpmpv.player.PlayerReadyToStartNextPanAndVoted;
+import com.dml.mpgame.game.extend.fpmpv.player.PlayerReadyToStartNextPanAndVoting;
+import com.dml.mpgame.game.extend.multipan.player.PlayerPanFinished;
+import com.dml.mpgame.game.extend.multipan.player.PlayerReadyToStartNextPan;
+import com.dml.mpgame.game.extend.vote.player.PlayerPlayingAndVoted;
+import com.dml.mpgame.game.extend.vote.player.PlayerPlayingAndVoting;
+import com.dml.mpgame.game.player.PlayerFinished;
+import com.dml.mpgame.game.player.PlayerJoined;
+import com.dml.mpgame.game.player.PlayerPlaying;
+import com.dml.mpgame.game.player.PlayerReadyToStart;
 
 public class PukeGamePlayerVO {
 	private String playerId;
@@ -19,7 +37,44 @@ public class PukeGamePlayerVO {
 		onlineState = dbo.getOnlineState().name();
 		totalScore = dbo.getTotalScore();
 		String sn = dbo.getState().name();
-
+		if (sn.equals(PlayerFinished.name)) {
+			state = "finished";
+		} else if (sn.equals(PlayerJoined.name)) {
+			state = "joined";
+		} else if (sn.equals(PlayerPanFinished.name)) {
+			state = "panFinished";
+		} else if (sn.equals(PlayerPlaying.name)) {
+			state = "playing";
+		} else if (sn.equals(PlayerQiangdizhu.name)) {
+			state = "qiangdizhu";
+		} else if (sn.equals(PlayerAfterQiangdizhu.name)) {
+			state = "qiangdizhu";
+		} else if (sn.equals(PlayerReadyToStart.name)) {
+			state = "readyToStart";
+		} else if (sn.equals(PlayerReadyToStartNextPan.name)) {
+			state = "readyToStart";
+		} else if (sn.equals(PlayerPlayingAndVoted.name)) {
+			state = "playing";
+		} else if (sn.equals(PlayerPlayingAndVoting.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerPanFinishedAndVoted.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerPanFinishedAndVoting.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerReadyToStartNextPanAndVoted.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerReadyToStartNextPanAndVoting.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerVotedWhenQiangdizhu.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerVotedWhenAfterQiangdizhu.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerVotingWhenQiangdizhu.name)) {
+			state = sn;
+		} else if (sn.equals(PlayerVotingWhenAfterQiangdizhu.name)) {
+			state = sn;
+		} else {
+		}
 	}
 
 	public String getPlayerId() {
