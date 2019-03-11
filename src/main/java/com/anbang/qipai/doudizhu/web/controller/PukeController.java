@@ -22,7 +22,6 @@ import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
-import com.anbang.qipai.doudizhu.cqrs.q.dbo.QiangdizhuInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukeGameQueryService;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukePlayQueryService;
 import com.anbang.qipai.doudizhu.msg.msjobj.PukeHistoricalJuResult;
@@ -34,7 +33,6 @@ import com.anbang.qipai.doudizhu.web.vo.GameInfoVO;
 import com.anbang.qipai.doudizhu.web.vo.JuResultVO;
 import com.anbang.qipai.doudizhu.web.vo.PanActionFrameVO;
 import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
-import com.anbang.qipai.doudizhu.web.vo.QiangdizhuInfoVO;
 import com.anbang.qipai.doudizhu.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.doudizhu.websocket.QueryScope;
 import com.dml.doudizhu.pan.PanActionFrame;
@@ -131,17 +129,6 @@ public class PukeController {
 		return vo;
 	}
 
-	@RequestMapping(value = "/qiangdizhu_info")
-	@ResponseBody
-	public CommonVO qiangdizhuInfo(String gameId, int panNo) {
-		CommonVO vo = new CommonVO();
-		QiangdizhuInfoDbo info = pukePlayQueryService.findQiangdizhuInfoDboByGameIdAndPanNo(gameId, panNo);
-		Map data = new HashMap();
-		vo.setData(data);
-		data.put("info", new QiangdizhuInfoVO(info));
-		return vo;
-	}
-
 	@RequestMapping(value = "/qiangdizhu")
 	@ResponseBody
 	public CommonVO qiangdizhu(String token, boolean qiang) {
@@ -182,10 +169,7 @@ public class PukeController {
 				}
 			}
 		}
-		queryScopes.add(QueryScope.qiangdizhuInfo.name());
-		if (qiangdizhuResult.getPukeGame().getState().name().equals(Playing.name)) {
-			queryScopes.add(QueryScope.panForMe.name());
-		}
+		queryScopes.add(QueryScope.panForMe.name());
 		return vo;
 	}
 

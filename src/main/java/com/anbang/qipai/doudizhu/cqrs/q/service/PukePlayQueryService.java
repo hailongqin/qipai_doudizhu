@@ -22,7 +22,6 @@ import com.anbang.qipai.doudizhu.cqrs.q.dao.JuResultDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.PanActionFrameDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.PanResultDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.PukeGameDboDao;
-import com.anbang.qipai.doudizhu.cqrs.q.dao.QiangdizhuInfoDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestPanActionFrameDbo;
@@ -30,7 +29,6 @@ import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanActionFrameDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
-import com.anbang.qipai.doudizhu.cqrs.q.dbo.QiangdizhuInfoDbo;
 import com.anbang.qipai.doudizhu.plan.bean.PlayerInfo;
 import com.anbang.qipai.doudizhu.plan.dao.PlayerInfoDao;
 import com.dml.doudizhu.pan.PanActionFrame;
@@ -52,9 +50,6 @@ public class PukePlayQueryService {
 
 	@Autowired
 	private JuResultDboDao juResultDboDao;
-
-	@Autowired
-	private QiangdizhuInfoDboDao qiangdizhuInfoDboDao;
 
 	@Autowired
 	private PanActionFrameDboDao panActionFrameDboDao;
@@ -96,6 +91,15 @@ public class PukePlayQueryService {
 		if (readyForGameResult.getFirstActionFrame() != null) {
 			PanActionFrame panActionFrame = readyForGameResult.getFirstActionFrame();
 			gameLatestPanActionFrameDboDao.save(pukeGame.getId(), panActionFrame);
+
+			GameInfo gameInfo = readyForGameResult.getGameInfo();
+			GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, readyForGameResult.getPlayerQiangdizhuMap(), gameInfo,
+					panActionFrame.getNo());
+			gameInfoDboDao.save(gameInfoDbo);
+			GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame,
+					readyForGameResult.getPlayerQiangdizhuMap(), gameInfo);
+			gameLatestInfoDboDao.save(gameLatestInfoDbo);
+
 			// 记录一条Frame，回放的时候要做
 			String gameId = pukeGame.getId();
 			int panNo = panActionFrame.getPanAfterAction().getNo();
@@ -113,13 +117,11 @@ public class PukePlayQueryService {
 		PukeGameDbo pukeGameDbo = new PukeGameDbo(pukeGame, playerInfoMap);
 		pukeGameDboDao.save(pukeGameDbo);
 
-		QiangdizhuInfoDbo info = new QiangdizhuInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap());
-		qiangdizhuInfoDboDao.save(info);
-
 		GameInfo gameInfo = qiangdizhuResult.getGameInfo();
-		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, gameInfo, 0);
+		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap(), gameInfo, 0);
 		gameInfoDboDao.save(gameInfoDbo);
-		GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame, gameInfo);
+		GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap(),
+				gameInfo);
 		gameLatestInfoDboDao.save(gameLatestInfoDbo);
 	}
 
@@ -141,9 +143,11 @@ public class PukePlayQueryService {
 		panActionFrameDboDao.save(panActionFrameDbo);
 
 		GameInfo gameInfo = pukeActionResult.getGameInfo();
-		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, gameInfo, actionNo);
+		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, pukeActionResult.getPlayerQiangdizhuMap(), gameInfo,
+				actionNo);
 		gameInfoDboDao.save(gameInfoDbo);
-		GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame, gameInfo);
+		GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame, pukeActionResult.getPlayerQiangdizhuMap(),
+				gameInfo);
 		gameLatestInfoDboDao.save(gameLatestInfoDbo);
 
 		// 盘出结果的话要记录结果
@@ -178,10 +182,6 @@ public class PukePlayQueryService {
 			panActionFrameDbo.setPanActionFrame(readyToNextPanResult.getFirstActionFrame());
 			panActionFrameDboDao.save(panActionFrameDbo);
 		}
-	}
-
-	public QiangdizhuInfoDbo findQiangdizhuInfoDboByGameIdAndPanNo(String gameId, int panNo) {
-		return qiangdizhuInfoDboDao.findByGameIdAndPanNo(gameId, panNo);
 	}
 
 	public PanResultDbo findPanResultDbo(String gameId, int panNo) {

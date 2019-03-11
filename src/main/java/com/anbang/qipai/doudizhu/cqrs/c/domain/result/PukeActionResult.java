@@ -1,7 +1,10 @@
 package com.anbang.qipai.doudizhu.cqrs.c.domain.result;
 
+import java.util.Map;
+
 import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
 import com.dml.doudizhu.pan.PanActionFrame;
 
 public class PukeActionResult {
@@ -10,6 +13,7 @@ public class PukeActionResult {
 	private PanActionFrame panActionFrame;
 	private DoudizhuPanResult panResult;
 	private DoudizhuJuResult juResult;
+	private Map<String, PlayerQiangdizhuState> playerQiangdizhuMap;
 
 	public PukeGameValueObject getPukeGame() {
 		return pukeGame;
@@ -49,6 +53,14 @@ public class PukeActionResult {
 
 	public void setJuResult(DoudizhuJuResult juResult) {
 		this.juResult = juResult;
+	}
+
+	public Map<String, PlayerQiangdizhuState> getPlayerQiangdizhuMap() {
+		return playerQiangdizhuMap;
+	}
+
+	public void setPlayerQiangdizhuMap(Map<String, PlayerQiangdizhuState> playerQiangdizhuMap) {
+		this.playerQiangdizhuMap = playerQiangdizhuMap;
 	}
 
 }

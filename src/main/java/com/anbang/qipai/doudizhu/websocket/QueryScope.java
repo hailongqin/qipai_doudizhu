@@ -20,7 +20,7 @@ import com.dml.mpgame.game.extend.vote.VotingWhenPlaying;
 import com.dml.mpgame.game.player.GamePlayerState;
 
 public enum QueryScope {
-	gameInfo, qiangdizhuInfo, panForMe, panResult, juResult, gameFinishVote;
+	gameInfo, panForMe, panResult, juResult, gameFinishVote;
 
 	public static List<QueryScope> scopesForState(GameState gameState, GamePlayerState playerState) {
 		List<QueryScope> scopes = new ArrayList<>();
@@ -31,11 +31,9 @@ public enum QueryScope {
 		} else if (gameState.name().equals(Qiangdizhu.name)) {
 			scopes.add(QueryScope.gameInfo);
 			scopes.add(QueryScope.panForMe);
-			scopes.add(QueryScope.qiangdizhuInfo);
 		} else if (gameState.name().equals(Playing.name)) {
 			scopes.add(QueryScope.gameInfo);
 			scopes.add(QueryScope.panForMe);
-			scopes.add(QueryScope.qiangdizhuInfo);
 		} else if (gameState.name().equals(VotingWhenPlaying.name)) {
 			scopes.add(QueryScope.gameInfo);
 			scopes.add(QueryScope.panForMe);

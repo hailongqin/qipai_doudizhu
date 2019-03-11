@@ -396,7 +396,6 @@ public class GameController {
 		queryScopes.add(QueryScope.gameInfo);
 		if (readyForGameResult.getPukeGame().getState().name().equals(Qiangdizhu.name)) {
 			queryScopes.add(QueryScope.panForMe);
-			queryScopes.add(QueryScope.qiangdizhuInfo);
 		}
 		data.put("queryScopes", queryScopes);
 		return vo;

@@ -1,9 +1,8 @@
 package com.anbang.qipai.doudizhu.cqrs.c.service.impl;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGame;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyForGameResult;
@@ -27,7 +26,6 @@ import com.dml.mpgame.game.leave.PlayerGameLeaveStrategy;
 import com.dml.mpgame.game.leave.PlayerLeaveCancelGameGameLeaveStrategy;
 import com.dml.mpgame.game.player.PlayerFinished;
 import com.dml.mpgame.game.ready.FixedNumberOfPlayersGameReadyStrategy;
-import com.dml.mpgame.game.watch.WatcherMap;
 import com.dml.mpgame.server.GameServer;
 
 @Component
@@ -145,6 +143,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 			PukeGame pukeGame = (PukeGame) gameServer.findGamePlayerPlaying(playerId);
 			PanActionFrame firstActionFrame = pukeGame.findFirstPanActionFrame();
 			result.setFirstActionFrame(firstActionFrame);
+			result.setPlayerQiangdizhuMap(pukeGame.getQiangdizhuInfo());
+			GameInfo gameInfo = new GameInfo();
+			gameInfo.setActionTime(currentTime);
+			result.setGameInfo(gameInfo);
 		}
 		return result;
 	}
@@ -236,36 +238,5 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		PukeGameValueObject pukeGameValueObject = gameServer.cancelReady(playerId, currentTime);
 		result.setPukeGame(pukeGameValueObject);
 		return result;
-	}
-
-	@Override
-	public PukeGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId)
-			throws Exception {
-		WatcherMap watcherMap = singletonEntityRepository.getEntity(WatcherMap.class);
-		watcherMap.join(playerId, nickName, headimgurl, gameId);
-		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
-		PukeGameValueObject majiangGameValueObject = gameServer.getInfo(playerId, gameId);
-		return majiangGameValueObject;
-	}
-
-	@Override
-	public PukeGameValueObject leaveWatch(String playerId, String gameId) throws Exception {
-		WatcherMap watcherMap = singletonEntityRepository.getEntity(WatcherMap.class);
-		watcherMap.leave(playerId, gameId);
-		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
-		PukeGameValueObject majiangGameValueObject = gameServer.getInfo(playerId, gameId);
-		return majiangGameValueObject;
-	}
-
-	@Override
-	public Map getwatch(String gameId) {
-		WatcherMap watcherMap = singletonEntityRepository.getEntity(WatcherMap.class);
-		return watcherMap.getWatch(gameId);
-	}
-
-	@Override
-	public void recycleWatch(String gameId) {
-		WatcherMap watcherMap = singletonEntityRepository.getEntity(WatcherMap.class);
-		watcherMap.recycleWatch(gameId);
 	}
 }
