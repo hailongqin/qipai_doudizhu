@@ -34,7 +34,7 @@ import com.dml.doudizhu.preparedapai.dipai.SanzhangDipaiDeterminer;
 import com.dml.doudizhu.preparedapai.lipai.DianshuOrPaishuShoupaiSortStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.RandomLuanPaiStrategy;
 import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
-import com.dml.doudizhu.preparedapai.position.RandomMenfengDeterminer;
+import com.dml.doudizhu.preparedapai.position.MustHasDongMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.xianda.DizhuXiandaDeterminer;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Playing;
@@ -117,7 +117,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		qiangdizhuDizhuDeterminer.setRenshu(renshu);
 		ju.setDizhuDeterminer(qiangdizhuDizhuDeterminer);
 
-		ju.setMenfengDeterminerForFirstPan(new RandomMenfengDeterminer());
+		ju.setMenfengDeterminerForFirstPan(new MustHasDongMenfengDeterminer());
 		ju.setMenfengDeterminerForNextPan(new NoChangeMenfengDeterminer());
 		ju.setXiandaDeterminer(new DizhuXiandaDeterminer());
 		ju.setShoupaiSortStrategy(new DianshuOrPaishuShoupaiSortStrategy());

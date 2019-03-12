@@ -1,5 +1,6 @@
 package com.anbang.qipai.doudizhu.cqrs.q.dao.mongodb;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.doudizhu.cqrs.q.dao.GameLatestInfoDboDao;
@@ -8,7 +9,7 @@ import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 
 @Component
 public class MongodbGameLatestInfoDboDao implements GameLatestInfoDboDao {
-
+	@Autowired
 	private GameLatestInfoDboRepository repository;
 
 	@Override

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.VoteNotPassWhenQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.VotingWhenQiangdizhu;
 import com.dml.mpgame.game.Canceled;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.GameState;
@@ -39,6 +41,14 @@ public enum QueryScope {
 			scopes.add(QueryScope.panForMe);
 			scopes.add(QueryScope.gameFinishVote);
 		} else if (gameState.name().equals(VoteNotPassWhenPlaying.name)) {
+			scopes.add(QueryScope.gameInfo);
+			scopes.add(QueryScope.gameFinishVote);
+			scopes.add(QueryScope.panForMe);
+		} else if (gameState.name().equals(VotingWhenQiangdizhu.name)) {
+			scopes.add(QueryScope.gameInfo);
+			scopes.add(QueryScope.panForMe);
+			scopes.add(QueryScope.gameFinishVote);
+		} else if (gameState.name().equals(VoteNotPassWhenQiangdizhu.name)) {
 			scopes.add(QueryScope.gameInfo);
 			scopes.add(QueryScope.gameFinishVote);
 			scopes.add(QueryScope.panForMe);

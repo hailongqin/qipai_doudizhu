@@ -18,6 +18,8 @@ public class PanResultVO {
 
 	private PanActionFrameVO lastPanActionFrame;
 
+	private GameInfoVO gameInfoVO;
+
 	public PanResultVO() {
 
 	}
@@ -43,6 +45,7 @@ public class PanResultVO {
 		panNo = panResultDbo.getPanNo();
 		finishTime = panResultDbo.getFinishTime();
 		lastPanActionFrame = new PanActionFrameVO(panResultDbo.getPanActionFrame());
+		gameInfoVO = new GameInfoVO(panResultDbo.getGameLatestInfoDbo());
 	}
 
 	public List<DoudizhuPanPlayerResultVO> getPlayerResultList() {
@@ -75,6 +78,14 @@ public class PanResultVO {
 
 	public void setLastPanActionFrame(PanActionFrameVO lastPanActionFrame) {
 		this.lastPanActionFrame = lastPanActionFrame;
+	}
+
+	public GameInfoVO getGameInfoVO() {
+		return gameInfoVO;
+	}
+
+	public void setGameInfoVO(GameInfoVO gameInfoVO) {
+		this.gameInfoVO = gameInfoVO;
 	}
 
 }

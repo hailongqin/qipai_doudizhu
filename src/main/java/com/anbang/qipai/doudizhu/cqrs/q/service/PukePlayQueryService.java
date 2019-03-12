@@ -15,6 +15,9 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyForGameResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.VoteNotPassWhenQiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.VotingWhenQiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.GameInfoDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.GameLatestInfoDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.GameLatestPanActionFrameDboDao;
@@ -69,7 +72,10 @@ public class PukePlayQueryService {
 		PukeGameDbo pukeGameDbo = pukeGameDboDao.findById(gameId);
 		if (!(pukeGameDbo.getState().name().equals(Playing.name)
 				|| pukeGameDbo.getState().name().equals(VotingWhenPlaying.name)
-				|| pukeGameDbo.getState().name().equals(VoteNotPassWhenPlaying.name))) {
+				|| pukeGameDbo.getState().name().equals(VoteNotPassWhenPlaying.name)
+				|| pukeGameDbo.getState().name().equals(Qiangdizhu.name)
+				|| pukeGameDbo.getState().name().equals(VotingWhenQiangdizhu.name)
+				|| pukeGameDbo.getState().name().equals(VoteNotPassWhenQiangdizhu.name))) {
 			throw new Exception("game not playing");
 		}
 		GameLatestPanActionFrameDbo frame = gameLatestPanActionFrameDboDao.findById(gameId);
@@ -81,7 +87,7 @@ public class PukePlayQueryService {
 		return gameLatestInfoDboDao.findById(gameId);
 	}
 
-	public void readyForGame(ReadyForGameResult readyForGameResult) throws Throwable {
+	public void readyForGame(ReadyForGameResult readyForGameResult) {
 		PukeGameValueObject pukeGame = readyForGameResult.getPukeGame();
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGame.allPlayerIds().forEach((playerId) -> playerInfoMap.put(playerId, playerInfoDao.findById(playerId)));
@@ -91,6 +97,13 @@ public class PukePlayQueryService {
 		if (readyForGameResult.getFirstActionFrame() != null) {
 			PanActionFrame panActionFrame = readyForGameResult.getFirstActionFrame();
 			gameLatestPanActionFrameDboDao.save(pukeGame.getId(), panActionFrame);
+			// 记录一条Frame，回放的时候要做
+			String gameId = pukeGame.getId();
+			int panNo = panActionFrame.getPanAfterAction().getNo();
+			int actionNo = panActionFrame.getNo();
+			PanActionFrameDbo panActionFrameDbo = new PanActionFrameDbo(gameId, panNo, actionNo);
+			panActionFrameDbo.setPanActionFrame(panActionFrame);
+			panActionFrameDboDao.save(panActionFrameDbo);
 
 			GameInfo gameInfo = readyForGameResult.getGameInfo();
 			GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, readyForGameResult.getPlayerQiangdizhuMap(), gameInfo,
@@ -99,18 +112,10 @@ public class PukePlayQueryService {
 			GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame,
 					readyForGameResult.getPlayerQiangdizhuMap(), gameInfo);
 			gameLatestInfoDboDao.save(gameLatestInfoDbo);
-
-			// 记录一条Frame，回放的时候要做
-			String gameId = pukeGame.getId();
-			int panNo = panActionFrame.getPanAfterAction().getNo();
-			int actionNo = panActionFrame.getNo();
-			PanActionFrameDbo panActionFrameDbo = new PanActionFrameDbo(gameId, panNo, actionNo);
-			panActionFrameDbo.setPanActionFrame(panActionFrame);
-			panActionFrameDboDao.save(panActionFrameDbo);
 		}
 	}
 
-	public void qiangdizhu(QiangdizhuResult qiangdizhuResult) throws Throwable {
+	public void qiangdizhu(QiangdizhuResult qiangdizhuResult) {
 		PukeGameValueObject pukeGame = qiangdizhuResult.getPukeGame();
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGame.allPlayerIds().forEach((playerId) -> playerInfoMap.put(playerId, playerInfoDao.findById(playerId)));
@@ -125,7 +130,7 @@ public class PukePlayQueryService {
 		gameLatestInfoDboDao.save(gameLatestInfoDbo);
 	}
 
-	public void action(PukeActionResult pukeActionResult) throws Throwable {
+	public void action(PukeActionResult pukeActionResult) {
 		PukeGameValueObject pukeGame = pukeActionResult.getPukeGame();
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGame.allPlayerIds().forEach((playerId) -> playerInfoMap.put(playerId, playerInfoDao.findById(playerId)));
@@ -155,6 +160,7 @@ public class PukePlayQueryService {
 		if (doudizhuPanResult != null) {
 			PanResultDbo panResultDbo = new PanResultDbo(gameId, doudizhuPanResult);
 			panResultDbo.setPanActionFrame(panActionFrame);
+			panResultDbo.setGameLatestInfoDbo(gameLatestInfoDbo);
 			panResultDboDao.save(panResultDbo);
 			if (pukeActionResult.getJuResult() != null) {// 一切都结束了
 				// 要记录局结果
@@ -164,7 +170,7 @@ public class PukePlayQueryService {
 		}
 	}
 
-	public void readyToNextPan(ReadyToNextPanResult readyToNextPanResult) throws Throwable {
+	public void readyToNextPan(ReadyToNextPanResult readyToNextPanResult) {
 		PukeGameValueObject pukeGame = readyToNextPanResult.getPukeGame();
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGame.allPlayerIds().forEach((pid) -> playerInfoMap.put(pid, playerInfoDao.findById(pid)));

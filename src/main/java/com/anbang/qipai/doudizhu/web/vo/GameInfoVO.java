@@ -11,14 +11,14 @@ public class GameInfoVO {
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
 
-	public GameInfoVO(GameLatestInfoDbo info) {
-		beishu = info.getBeishu();
-		dipaiList = info.getDipaiList();
-		playerQiangdizhuInfos = info.getPlayerQiangdizhuInfos();
-	}
-
 	public GameInfoVO() {
 
+	}
+
+	public GameInfoVO(GameLatestInfoDbo gameLatestInfoDbo) {
+		beishu = gameLatestInfoDbo.getBeishu();
+		dipaiList = gameLatestInfoDbo.getDipaiList();
+		playerQiangdizhuInfos = gameLatestInfoDbo.getPlayerQiangdizhuInfos();
 	}
 
 	public int getBeishu() {

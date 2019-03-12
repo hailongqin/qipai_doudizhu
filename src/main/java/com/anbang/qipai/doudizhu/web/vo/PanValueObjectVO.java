@@ -13,6 +13,7 @@ public class PanValueObjectVO {
 	private List<DoudizhuPlayerValueObjectVO> doudizhuPlayerList;
 	private PaiListValueObject paiListValueObject;
 	private List<DianShuZuPaiZu> dachuPaiZuList;
+	private String dizhuPlayerId;// 地主id
 	private Position actionPosition;
 	private String latestDapaiPlayerId;
 
@@ -28,5 +29,63 @@ public class PanValueObjectVO {
 		dachuPaiZuList = panValueObject.getDachuPaiZuList();
 		actionPosition = panValueObject.getActionPosition();
 		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
+		dizhuPlayerId = panValueObject.getDizhuPlayerId();
 	}
+
+	public String getDizhuPlayerId() {
+		return dizhuPlayerId;
+	}
+
+	public void setDizhuPlayerId(String dizhuPlayerId) {
+		this.dizhuPlayerId = dizhuPlayerId;
+	}
+
+	public int getNo() {
+		return no;
+	}
+
+	public void setNo(int no) {
+		this.no = no;
+	}
+
+	public List<DoudizhuPlayerValueObjectVO> getDoudizhuPlayerList() {
+		return doudizhuPlayerList;
+	}
+
+	public void setDoudizhuPlayerList(List<DoudizhuPlayerValueObjectVO> doudizhuPlayerList) {
+		this.doudizhuPlayerList = doudizhuPlayerList;
+	}
+
+	public PaiListValueObject getPaiListValueObject() {
+		return paiListValueObject;
+	}
+
+	public void setPaiListValueObject(PaiListValueObject paiListValueObject) {
+		this.paiListValueObject = paiListValueObject;
+	}
+
+	public List<DianShuZuPaiZu> getDachuPaiZuList() {
+		return dachuPaiZuList;
+	}
+
+	public void setDachuPaiZuList(List<DianShuZuPaiZu> dachuPaiZuList) {
+		this.dachuPaiZuList = dachuPaiZuList;
+	}
+
+	public Position getActionPosition() {
+		return actionPosition;
+	}
+
+	public void setActionPosition(Position actionPosition) {
+		this.actionPosition = actionPosition;
+	}
+
+	public String getLatestDapaiPlayerId() {
+		return latestDapaiPlayerId;
+	}
+
+	public void setLatestDapaiPlayerId(String latestDapaiPlayerId) {
+		this.latestDapaiPlayerId = latestDapaiPlayerId;
+	}
+
 }

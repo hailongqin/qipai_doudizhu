@@ -151,13 +151,7 @@ public class PukeController {
 			vo.setMsg(e.getClass().getName());
 			return vo;
 		}
-		try {
-			pukePlayQueryService.qiangdizhu(qiangdizhuResult);
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			return vo;
-		}
+		pukePlayQueryService.qiangdizhu(qiangdizhuResult);
 		// 通知其他人
 		for (String otherPlayerId : qiangdizhuResult.getPukeGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
@@ -206,17 +200,7 @@ public class PukeController {
 					+ vo.getMsg() + "," + "endTime:" + endTime + "," + "use:" + (endTime - startTime) + "ms");
 			return vo;
 		}
-		try {
-			pukePlayQueryService.action(pukeActionResult);
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			long endTime = System.currentTimeMillis();
-			logger.info("action:da," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "paiIds:"
-					+ paiIds + "," + "dianshuZuheIdx:" + dianshuZuheIdx + "," + "success:" + vo.isSuccess() + ",msg:"
-					+ vo.getMsg() + "," + "endTime:" + endTime + "," + "use:" + (endTime - startTime) + "ms");
-			return vo;
-		}
+		pukePlayQueryService.action(pukeActionResult);
 
 		if (pukeActionResult.getPanResult() == null) {// 盘没结束
 			queryScopes.add(QueryScope.gameInfo.name());
@@ -293,17 +277,7 @@ public class PukeController {
 					+ (endTime - startTime) + "ms");
 			return vo;
 		}
-		try {
-			pukePlayQueryService.action(pukeActionResult);
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			long endTime = System.currentTimeMillis();
-			logger.info("action:guo," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "success:"
-					+ vo.isSuccess() + ",msg:" + vo.getMsg() + "," + "endTime:" + endTime + "," + "use:"
-					+ (endTime - startTime) + "ms");
-			return vo;
-		}
+		pukePlayQueryService.action(pukeActionResult);
 
 		queryScopes.add(QueryScope.panForMe.name());
 		queryScopes.add(QueryScope.gameInfo.name());
@@ -348,14 +322,7 @@ public class PukeController {
 			vo.setMsg(e.getClass().getName());
 			return vo;
 		}
-
-		try {
-			pukePlayQueryService.readyToNextPan(readyToNextPanResult);
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			return vo;
-		}
+		pukePlayQueryService.readyToNextPan(readyToNextPanResult);
 
 		// 通知其他人
 		for (String otherPlayerId : readyToNextPanResult.getPukeGame().allPlayerIds()) {

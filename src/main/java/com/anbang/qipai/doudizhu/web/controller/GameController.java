@@ -372,13 +372,7 @@ public class GameController {
 			return vo;
 		}
 
-		try {
-			pukePlayQueryService.readyForGame(readyForGameResult);// TODO 一起点准备的时候可能有同步问题.要靠框架解决
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			return vo;
-		}
+		pukePlayQueryService.readyForGame(readyForGameResult);// TODO 一起点准备的时候可能有同步问题.要靠框架解决
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getPukeGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
@@ -428,13 +422,7 @@ public class GameController {
 			return vo;
 		}
 
-		try {
-			pukePlayQueryService.readyForGame(readyForGameResult);// TODO 一起点准备的时候可能有同步问题.要靠框架解决
-		} catch (Throwable e) {
-			vo.setSuccess(false);
-			vo.setMsg(e.getMessage());
-			return vo;
-		}
+		pukePlayQueryService.readyForGame(readyForGameResult);// TODO 一起点准备的时候可能有同步问题.要靠框架解决
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getPukeGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {

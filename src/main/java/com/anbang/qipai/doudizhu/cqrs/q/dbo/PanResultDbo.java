@@ -14,6 +14,7 @@ public class PanResultDbo {
 	private List<DoudizhuPanPlayerResultDbo> playerResultList;
 	private long finishTime;
 	private PanActionFrame panActionFrame;
+	private GameLatestInfoDbo gameLatestInfoDbo;
 
 	public PanResultDbo() {
 
@@ -79,6 +80,14 @@ public class PanResultDbo {
 
 	public void setPanActionFrame(PanActionFrame panActionFrame) {
 		this.panActionFrame = panActionFrame;
+	}
+
+	public GameLatestInfoDbo getGameLatestInfoDbo() {
+		return gameLatestInfoDbo;
+	}
+
+	public void setGameLatestInfoDbo(GameLatestInfoDbo gameLatestInfoDbo) {
+		this.gameLatestInfoDbo = gameLatestInfoDbo;
 	}
 
 }

@@ -10,7 +10,7 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
 import com.dml.puke.pai.PukePai;
 
 public class GameLatestInfoDbo {
-	private String gameId;
+	private String id;
 	private int beishu;
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
@@ -21,7 +21,7 @@ public class GameLatestInfoDbo {
 
 	public GameLatestInfoDbo(PukeGameValueObject pukeGame, Map<String, PlayerQiangdizhuState> playerQiangdizhuMap,
 			GameInfo gameInfo) {
-		gameId = pukeGame.getId();
+		id = pukeGame.getId();
 		beishu = gameInfo.getBeishu();
 		dipaiList = gameInfo.getDipaiList();
 		playerQiangdizhuInfos = new ArrayList<>();
@@ -33,12 +33,12 @@ public class GameLatestInfoDbo {
 		}
 	}
 
-	public String getGameId() {
-		return gameId;
+	public String getId() {
+		return id;
 	}
 
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public int getBeishu() {
