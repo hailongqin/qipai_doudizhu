@@ -47,7 +47,7 @@ public class DoudizhuWaihaoGenerator implements WaihaoGenerator {
 		}
 		// 连三张
 		if (dianShuZu instanceof LiansanzhangDianShuZu) {
-			dianShuZuPaiZu.setWaihao("liansanzhang");
+			dianShuZuPaiZu.setWaihao("feiji");
 		}
 		// 飞机
 		if (dianShuZu instanceof FeijiDianShuZu) {
@@ -67,8 +67,7 @@ public class DoudizhuWaihaoGenerator implements WaihaoGenerator {
 		}
 		// 单个炸弹
 		if (dianShuZu instanceof DanGeZhadanDianShuZu) {
-			DianShu dianshu = ((DanGeZhadanDianShuZu) dianShuZu).getDianShu();
-			dianShuZuPaiZu.setWaihao(((DanGeZhadanDianShuZu) dianShuZu).getSize() + dianshu.name());
+			dianShuZuPaiZu.setWaihao("zhadan");
 		}
 		// 王炸
 		if (dianShuZu instanceof HuojianDianShuZu) {

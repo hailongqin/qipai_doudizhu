@@ -33,8 +33,8 @@ import com.dml.doudizhu.preparedapai.avaliablepai.OneAvaliablePaiFiller;
 import com.dml.doudizhu.preparedapai.dipai.SanzhangDipaiDeterminer;
 import com.dml.doudizhu.preparedapai.lipai.DianshuOrPaishuShoupaiSortStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.RandomLuanPaiStrategy;
-import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.position.MustHasDongMenfengDeterminer;
+import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.xianda.DizhuXiandaDeterminer;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Playing;
@@ -71,7 +71,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		if (dizhu != null) {
 			currentPan.setDizhuPlayerId(dizhu);
 			ju.getDipaiDeterminer().fadipai(ju);
-			SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDizhuDeterminer();
+			SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDipaiDeterminer();
 			beishu.setDipaiHasDuiA(sanzhangDipaiDeterminer.dipaiHasDuiA());
 			beishu.setDipaiHasDuier(sanzhangDipaiDeterminer.dipaiHasDuier());
 			beishu.setDipaiTonghua(sanzhangDipaiDeterminer.dipaiIsTonghua());
@@ -87,6 +87,8 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		}
 		beishu.calculate();
 		gameInfo.setBeishu(beishu.getValue());
+		PanActionFrame frame = currentPan.recordPanActionFrame(null, currentTime);
+		result.setPanActionFrame(frame);
 		result.setPukeGame(new PukeGameValueObject(this));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
 		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
@@ -165,7 +167,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		DoudizhuBeishu beishu = new DoudizhuBeishu();
 		beishu.setRenshu(renshu);
 		beishu.setQiangdizhuCount(qiangdizhuDizhuDeterminer.getQiangdizhuCount());
-		SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDizhuDeterminer();
+		SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDipaiDeterminer();
 		beishu.setDipaiHasDuiA(sanzhangDipaiDeterminer.dipaiHasDuiA());
 		beishu.setDipaiHasDuier(sanzhangDipaiDeterminer.dipaiHasDuier());
 		beishu.setDipaiTonghua(sanzhangDipaiDeterminer.dipaiIsTonghua());
@@ -209,7 +211,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		DoudizhuBeishu beishu = new DoudizhuBeishu();
 		beishu.setRenshu(renshu);
 		beishu.setQiangdizhuCount(qiangdizhuDizhuDeterminer.getQiangdizhuCount());
-		SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDizhuDeterminer();
+		SanzhangDipaiDeterminer sanzhangDipaiDeterminer = (SanzhangDipaiDeterminer) ju.getDipaiDeterminer();
 		beishu.setDipaiHasDuiA(sanzhangDipaiDeterminer.dipaiHasDuiA());
 		beishu.setDipaiHasDuier(sanzhangDipaiDeterminer.dipaiHasDuier());
 		beishu.setDipaiTonghua(sanzhangDipaiDeterminer.dipaiIsTonghua());

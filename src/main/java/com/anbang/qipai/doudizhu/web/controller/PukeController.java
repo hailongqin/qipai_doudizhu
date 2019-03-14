@@ -29,7 +29,6 @@ import com.anbang.qipai.doudizhu.msg.msjobj.PukeHistoricalPanResult;
 import com.anbang.qipai.doudizhu.msg.service.DoudizhuGameMsgService;
 import com.anbang.qipai.doudizhu.msg.service.DoudizhuResultMsgService;
 import com.anbang.qipai.doudizhu.web.vo.CommonVO;
-import com.anbang.qipai.doudizhu.web.vo.GameInfoVO;
 import com.anbang.qipai.doudizhu.web.vo.JuResultVO;
 import com.anbang.qipai.doudizhu.web.vo.PanActionFrameVO;
 import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
@@ -91,8 +90,7 @@ public class PukeController {
 			vo.setMsg(e.getMessage());
 			return vo;
 		}
-		data.put("panActionFrame", new PanActionFrameVO(panActionFrame));
-		data.put("gameInfo", new GameInfoVO(gameLatestInfoDbo));
+		data.put("panActionFrame", new PanActionFrameVO(panActionFrame, gameLatestInfoDbo));
 		return vo;
 	}
 

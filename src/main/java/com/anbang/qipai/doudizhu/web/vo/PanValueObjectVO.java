@@ -3,8 +3,10 @@ package com.anbang.qipai.doudizhu.web.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 import com.dml.doudizhu.pan.PanValueObject;
 import com.dml.puke.pai.PaiListValueObject;
+import com.dml.puke.pai.PukePai;
 import com.dml.puke.wanfa.dianshu.paizu.DianShuZuPaiZu;
 import com.dml.puke.wanfa.position.Position;
 
@@ -16,6 +18,8 @@ public class PanValueObjectVO {
 	private String dizhuPlayerId;// 地主id
 	private Position actionPosition;
 	private String latestDapaiPlayerId;
+	private int beishu;
+	private List<PukePai> dipaiList;
 
 	public PanValueObjectVO() {
 	}
@@ -30,6 +34,20 @@ public class PanValueObjectVO {
 		actionPosition = panValueObject.getActionPosition();
 		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
 		dizhuPlayerId = panValueObject.getDizhuPlayerId();
+	}
+
+	public PanValueObjectVO(PanValueObject panValueObject, GameLatestInfoDbo gameLatestInfoDbo) {
+		no = panValueObject.getNo();
+		doudizhuPlayerList = new ArrayList<>();
+		panValueObject.getDoudizhuPlayerList().forEach((doudizhuPlayer) -> doudizhuPlayerList
+				.add(new DoudizhuPlayerValueObjectVO(doudizhuPlayer, gameLatestInfoDbo.getPlayerQiangdizhuInfos())));
+		paiListValueObject = panValueObject.getPaiListValueObject();
+		dachuPaiZuList = panValueObject.getDachuPaiZuList();
+		actionPosition = panValueObject.getActionPosition();
+		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
+		dizhuPlayerId = panValueObject.getDizhuPlayerId();
+		beishu = gameLatestInfoDbo.getBeishu();
+		dipaiList = gameLatestInfoDbo.getDipaiList();
 	}
 
 	public String getDizhuPlayerId() {
@@ -86,6 +104,22 @@ public class PanValueObjectVO {
 
 	public void setLatestDapaiPlayerId(String latestDapaiPlayerId) {
 		this.latestDapaiPlayerId = latestDapaiPlayerId;
+	}
+
+	public int getBeishu() {
+		return beishu;
+	}
+
+	public void setBeishu(int beishu) {
+		this.beishu = beishu;
+	}
+
+	public List<PukePai> getDipaiList() {
+		return dipaiList;
+	}
+
+	public void setDipaiList(List<PukePai> dipaiList) {
+		this.dipaiList = dipaiList;
 	}
 
 }

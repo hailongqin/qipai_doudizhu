@@ -210,8 +210,8 @@ public class DoudizhuSolutionGenerator {
 					amountArray[i + k] -= 3;
 				}
 				List<DianShu> chibangList = new ArrayList<>();
-				generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, chibangList, dianShuAmountArray,
-						0, 0, length);
+				generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, chibangList, amountArray, 0, 0,
+						length);
 			}
 		}
 		return feijidaiyiList;
@@ -227,7 +227,7 @@ public class DoudizhuSolutionGenerator {
 					int[] amountArray = dianShuAmountArray.clone();
 					amountArray[i] = 0;
 					generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, new ArrayList<>(chibangList),
-							dianShuAmountArray, i, count + 1, length);
+							amountArray, i, count + 1, length);
 				}
 			}
 		} else {
@@ -284,8 +284,8 @@ public class DoudizhuSolutionGenerator {
 					amountArray[i + k] -= 3;
 				}
 				List<DianShu> chibangList = new ArrayList<>();
-				generateFeijidaierDianShuZuChibang(feijidaierList, lianXuDianShuArray, chibangList, dianShuAmountArray,
-						0, 0, length);
+				generateFeijidaierDianShuZuChibang(feijidaierList, lianXuDianShuArray, chibangList, amountArray, 0, 0,
+						length);
 			}
 		}
 		return feijidaierList;
@@ -301,7 +301,7 @@ public class DoudizhuSolutionGenerator {
 					int[] amountArray = dianShuAmountArray.clone();
 					amountArray[i] = 0;
 					generateFeijidaierDianShuZuChibang(feijidaierList, lianXuDianShuArray, new ArrayList<>(chibangList),
-							dianShuAmountArray, i, count + 1, length);
+							amountArray, i, count + 1, length);
 				}
 			}
 		} else {

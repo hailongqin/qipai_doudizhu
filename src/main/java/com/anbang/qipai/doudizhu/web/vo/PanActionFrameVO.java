@@ -1,5 +1,6 @@
 package com.anbang.qipai.doudizhu.web.vo;
 
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 import com.dml.doudizhu.pan.PanActionFrame;
 import com.dml.doudizhu.player.action.DoudizhuPlayerAction;
 
@@ -17,6 +18,13 @@ public class PanActionFrameVO {
 		no = panActionFrame.getNo();
 		action = panActionFrame.getAction();
 		panAfterAction = new PanValueObjectVO(panActionFrame.getPanAfterAction());
+		actionTime = panActionFrame.getActionTime();
+	}
+
+	public PanActionFrameVO(PanActionFrame panActionFrame, GameLatestInfoDbo gameLatestInfoDbo) {
+		no = panActionFrame.getNo();
+		action = panActionFrame.getAction();
+		panAfterAction = new PanValueObjectVO(panActionFrame.getPanAfterAction(), gameLatestInfoDbo);
 		actionTime = panActionFrame.getActionTime();
 	}
 

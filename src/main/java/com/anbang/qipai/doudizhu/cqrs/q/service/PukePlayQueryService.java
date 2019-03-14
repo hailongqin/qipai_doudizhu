@@ -122,8 +122,20 @@ public class PukePlayQueryService {
 		PukeGameDbo pukeGameDbo = new PukeGameDbo(pukeGame, playerInfoMap);
 		pukeGameDboDao.save(pukeGameDbo);
 
+		String gameId = pukeGameDbo.getId();
+		PanActionFrame panActionFrame = qiangdizhuResult.getPanActionFrame();
+
+		gameLatestPanActionFrameDboDao.save(gameId, panActionFrame);
+		// 记录一条Frame，回放的时候要做
+		int panNo = panActionFrame.getPanAfterAction().getNo();
+		int actionNo = panActionFrame.getNo();
+		PanActionFrameDbo panActionFrameDbo = new PanActionFrameDbo(gameId, panNo, actionNo);
+		panActionFrameDbo.setPanActionFrame(panActionFrame);
+		panActionFrameDboDao.save(panActionFrameDbo);
+
 		GameInfo gameInfo = qiangdizhuResult.getGameInfo();
-		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap(), gameInfo, 0);
+		GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap(), gameInfo,
+				actionNo);
 		gameInfoDboDao.save(gameInfoDbo);
 		GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame, qiangdizhuResult.getPlayerQiangdizhuMap(),
 				gameInfo);

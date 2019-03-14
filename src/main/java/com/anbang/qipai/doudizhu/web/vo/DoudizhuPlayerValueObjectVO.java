@@ -2,6 +2,8 @@ package com.anbang.qipai.doudizhu.web.vo;
 
 import java.util.List;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.PlayerQiangdizhuInfoDbo;
 import com.dml.doudizhu.player.DoudizhuPlayerValueObject;
 import com.dml.doudizhu.player.action.da.solution.DaPaiDianShuSolution;
 import com.dml.puke.pai.PukePai;
@@ -21,6 +23,7 @@ public class DoudizhuPlayerValueObjectVO {
 	private List<DaPaiDianShuSolution> yaPaiSolutionsForTips;
 	private boolean guo;
 	private boolean watingForMe = false;
+	private PlayerQiangdizhuState state;
 
 	public DoudizhuPlayerValueObjectVO() {
 
@@ -46,6 +49,34 @@ public class DoudizhuPlayerValueObjectVO {
 		}
 		yaPaiSolutionsForTips = doudizhuPlayerValueObject.getYaPaiSolutionsForTips();
 		guo = doudizhuPlayerValueObject.isGuo();
+	}
+
+	public DoudizhuPlayerValueObjectVO(DoudizhuPlayerValueObject doudizhuPlayerValueObject,
+			List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos) {
+		id = doudizhuPlayerValueObject.getId();
+		position = doudizhuPlayerValueObject.getPosition();
+		shoupaiIdListForSortList = doudizhuPlayerValueObject.getShoupaiIdListForSortList();
+		if (shoupaiIdListForSortList == null || shoupaiIdListForSortList.isEmpty()) {
+			allShoupai = new DoudizhuPlayerShoupaiVO(doudizhuPlayerValueObject.getAllShoupai(),
+					doudizhuPlayerValueObject.getTotalShoupai(), null);
+		} else {
+			allShoupai = new DoudizhuPlayerShoupaiVO(doudizhuPlayerValueObject.getAllShoupai(),
+					doudizhuPlayerValueObject.getTotalShoupai(), shoupaiIdListForSortList.get(0));
+		}
+		shoupaiDianShuAmountArray = doudizhuPlayerValueObject.getShoupaiDianShuAmountArray();
+		lishiDachuPaiZuList = doudizhuPlayerValueObject.getLishiDachuPaiZuList();
+		publicDachuPaiZu = doudizhuPlayerValueObject.getPublicDachuPaiZu();
+		yaPaiSolutionCandidates = doudizhuPlayerValueObject.getYaPaiSolutionCandidates();
+		if (yaPaiSolutionCandidates != null && !yaPaiSolutionCandidates.isEmpty()) {
+			watingForMe = true;
+		}
+		yaPaiSolutionsForTips = doudizhuPlayerValueObject.getYaPaiSolutionsForTips();
+		guo = doudizhuPlayerValueObject.isGuo();
+		for (PlayerQiangdizhuInfoDbo info : playerQiangdizhuInfos) {
+			if (info.getPlayerId().equals(id)) {
+				state = info.getState();
+			}
+		}
 	}
 
 	public String getId() {
@@ -142,6 +173,14 @@ public class DoudizhuPlayerValueObjectVO {
 
 	public void setWatingForMe(boolean watingForMe) {
 		this.watingForMe = watingForMe;
+	}
+
+	public PlayerQiangdizhuState getState() {
+		return state;
+	}
+
+	public void setState(PlayerQiangdizhuState state) {
+		this.state = state;
 	}
 
 }
