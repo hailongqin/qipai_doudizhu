@@ -6,7 +6,6 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PlayerQiangdizhuInfoDbo;
 import com.dml.doudizhu.player.DoudizhuPlayerValueObject;
 import com.dml.doudizhu.player.action.da.solution.DaPaiDianShuSolution;
-import com.dml.puke.pai.PukePai;
 import com.dml.puke.wanfa.dianshu.paizu.DianShuZuPaiZu;
 import com.dml.puke.wanfa.position.Position;
 
@@ -14,7 +13,6 @@ public class DoudizhuPlayerValueObjectVO {
 	private String id;
 	private Position position;
 	private DoudizhuPlayerShoupaiVO allShoupai;
-	private List<PukePai> liangPaiList;
 	private int[] shoupaiDianShuAmountArray;
 	private List<List<Integer>> shoupaiIdListForSortList;
 	private List<DianShuZuPaiZu> lishiDachuPaiZuList;
@@ -24,6 +22,7 @@ public class DoudizhuPlayerValueObjectVO {
 	private boolean guo;
 	private boolean watingForMe = false;
 	private PlayerQiangdizhuState state;
+	private boolean noPaiWarning;// 结束警报
 
 	public DoudizhuPlayerValueObjectVO() {
 
@@ -103,14 +102,6 @@ public class DoudizhuPlayerValueObjectVO {
 		this.allShoupai = allShoupai;
 	}
 
-	public List<PukePai> getLiangPaiList() {
-		return liangPaiList;
-	}
-
-	public void setLiangPaiList(List<PukePai> liangPaiList) {
-		this.liangPaiList = liangPaiList;
-	}
-
 	public int[] getShoupaiDianShuAmountArray() {
 		return shoupaiDianShuAmountArray;
 	}
@@ -181,6 +172,14 @@ public class DoudizhuPlayerValueObjectVO {
 
 	public void setState(PlayerQiangdizhuState state) {
 		this.state = state;
+	}
+
+	public boolean isNoPaiWarning() {
+		return noPaiWarning;
+	}
+
+	public void setNoPaiWarning(boolean noPaiWarning) {
+		this.noPaiWarning = noPaiWarning;
 	}
 
 }

@@ -190,15 +190,23 @@ public class PukePlayQueryService {
 		pukeGameDboDao.save(pukeGameDbo);
 
 		if (readyToNextPanResult.getFirstActionFrame() != null) {
-			String gameId = pukeGameDbo.getId();
 			PanActionFrame panActionFrame = readyToNextPanResult.getFirstActionFrame();
-			gameLatestPanActionFrameDboDao.save(gameId, panActionFrame);
+			gameLatestPanActionFrameDboDao.save(pukeGame.getId(), panActionFrame);
 			// 记录一条Frame，回放的时候要做
-			int panNo = readyToNextPanResult.getFirstActionFrame().getPanAfterAction().getNo();
-			int actionNo = readyToNextPanResult.getFirstActionFrame().getNo();
+			String gameId = pukeGame.getId();
+			int panNo = panActionFrame.getPanAfterAction().getNo();
+			int actionNo = panActionFrame.getNo();
 			PanActionFrameDbo panActionFrameDbo = new PanActionFrameDbo(gameId, panNo, actionNo);
-			panActionFrameDbo.setPanActionFrame(readyToNextPanResult.getFirstActionFrame());
+			panActionFrameDbo.setPanActionFrame(panActionFrame);
 			panActionFrameDboDao.save(panActionFrameDbo);
+
+			GameInfo gameInfo = readyToNextPanResult.getGameInfo();
+			GameInfoDbo gameInfoDbo = new GameInfoDbo(pukeGame, readyToNextPanResult.getPlayerQiangdizhuMap(), gameInfo,
+					panActionFrame.getNo());
+			gameInfoDboDao.save(gameInfoDbo);
+			GameLatestInfoDbo gameLatestInfoDbo = new GameLatestInfoDbo(pukeGame,
+					readyToNextPanResult.getPlayerQiangdizhuMap(), gameInfo);
+			gameLatestInfoDboDao.save(gameLatestInfoDbo);
 		}
 	}
 
@@ -212,5 +220,9 @@ public class PukePlayQueryService {
 
 	public List<PanActionFrameDbo> findPanActionFrameDboForBackPlay(String gameId, int panNo) {
 		return panActionFrameDboDao.findByGameIdAndPanNo(gameId, panNo);
+	}
+
+	public List<GameInfoDbo> findGameInfoDboForBackPlay(String gameId, int panNo) {
+		return gameInfoDboDao.findByGameIdAndPanNo(gameId, panNo);
 	}
 }

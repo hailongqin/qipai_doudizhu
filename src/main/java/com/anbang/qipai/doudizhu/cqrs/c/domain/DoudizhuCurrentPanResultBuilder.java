@@ -34,11 +34,10 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 		}
 		Pan currentPan = ju.getCurrentPan();
 		String dizhu = currentPan.getDizhuPlayerId();
-		String yingjia = null;
-		for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
-			if (player.getAllShoupai().size() == 0) {
-				yingjia = player.getId();
-			}
+		boolean dizhuying = false;
+		DoudizhuPlayer dizhuPlayer = currentPan.findDizhu();
+		if (dizhuPlayer.getAllShoupai().size() == 0) {
+			dizhuying = true;
 		}
 
 		ChuntainAndFanchuntianOpportunityDetector chuntainAndFanchuntianOpportunityDetector = ju
@@ -63,21 +62,33 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 		beishu.setFanchuntian(chuntainAndFanchuntianOpportunityDetector.isFanChuntian());
 		beishu.calculate();
 
+		Map<String, Integer> playerZhadanCountMap = zhadanDaActionStatisticsListener.getPlayerZhadanCountMap();
 		List<DoudizhuPanPlayerResult> panPlayerResultList = new ArrayList<>();
-		if (dizhu.equals(yingjia)) {// 地主赢
+		if (dizhuying) {// 地主赢
 			for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
 				DoudizhuPanPlayerResult playerResult = new DoudizhuPanPlayerResult();
 				if (dizhu.equals(player.getId())) {
 					playerResult.setPlayerId(player.getId());
 					playerResult.setYing(true);
+					playerResult.setDizhu(true);
 					playerResult.setDifen(difen);
 					playerResult.setBeishu(beishu);
-					playerResult.setScore(2 * difen * beishu.getValue());
+					playerResult.setScore((renshu - 1) * difen * beishu.getValue());
+					Integer count = playerZhadanCountMap.get(player.getId());
+					if (count == null) {
+						count = 0;
+					}
+					playerResult.setZhadanCount(count);
 				} else {
 					playerResult.setPlayerId(player.getId());
 					playerResult.setDifen(difen);
 					playerResult.setBeishu(beishu);
 					playerResult.setScore(-1 * difen * beishu.getValue());
+					Integer count = playerZhadanCountMap.get(player.getId());
+					if (count == null) {
+						count = 0;
+					}
+					playerResult.setZhadanCount(count);
 				}
 				panPlayerResultList.add(playerResult);
 			}
@@ -86,15 +97,26 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 				DoudizhuPanPlayerResult playerResult = new DoudizhuPanPlayerResult();
 				if (dizhu.equals(player.getId())) {
 					playerResult.setPlayerId(player.getId());
+					playerResult.setDizhu(true);
 					playerResult.setDifen(difen);
 					playerResult.setBeishu(beishu);
-					playerResult.setScore(-2 * difen * beishu.getValue());
+					playerResult.setScore(-(renshu - 1) * difen * beishu.getValue());
+					Integer count = playerZhadanCountMap.get(player.getId());
+					if (count == null) {
+						count = 0;
+					}
+					playerResult.setZhadanCount(count);
 				} else {
 					playerResult.setPlayerId(player.getId());
 					playerResult.setYing(true);
 					playerResult.setDifen(difen);
 					playerResult.setBeishu(beishu);
 					playerResult.setScore(difen * beishu.getValue());
+					Integer count = playerZhadanCountMap.get(player.getId());
+					if (count == null) {
+						count = 0;
+					}
+					playerResult.setZhadanCount(count);
 				}
 				panPlayerResultList.add(playerResult);
 			}
@@ -109,6 +131,7 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 			}
 		});
 		DoudizhuPanResult panResult = new DoudizhuPanResult();
+		panResult.setDizhuying(dizhuying);
 		panResult.setPan(new PanValueObject(currentPan));
 		panResult.setPanPlayerResultList(panPlayerResultList);
 		panResult.setPanFinishTime(panFinishTime);

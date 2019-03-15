@@ -11,8 +11,11 @@ public class DoudizhuPanPlayerResultVO {
 	private String nickname;
 	private String headimgurl;
 	private DoudizhuPlayerShoupaiVO allShoupai;
+	private boolean ying;
+	private boolean dizhu;
 	private int difen;
-	private int beishu;
+	private DoudizhuBeishuVO beishu;
+	private int zhadanCount;
 	private int score;// 一盘结算分
 	private int totalScore;// 总分
 
@@ -20,11 +23,11 @@ public class DoudizhuPanPlayerResultVO {
 
 	}
 
-	public DoudizhuPanPlayerResultVO(PukeGamePlayerDbo playerDbo, DoudizhuPanPlayerResultDbo panPlayerResult,
-			DoudizhuPlayerValueObject playerValueObject) {
+	public DoudizhuPanPlayerResultVO(PukeGamePlayerDbo playerDbo, DoudizhuPanPlayerResultDbo panPlayerResult) {
 		playerId = playerDbo.getPlayerId();
 		nickname = playerDbo.getNickname();
 		headimgurl = playerDbo.getHeadimgurl();
+		DoudizhuPlayerValueObject playerValueObject = panPlayerResult.getPlayer();
 		List<List<Integer>> shoupaiIdListForSortList = playerValueObject.getShoupaiIdListForSortList();
 		if (shoupaiIdListForSortList == null || shoupaiIdListForSortList.isEmpty()) {
 			allShoupai = new DoudizhuPlayerShoupaiVO(playerValueObject.getAllShoupai(),
@@ -33,8 +36,11 @@ public class DoudizhuPanPlayerResultVO {
 			allShoupai = new DoudizhuPlayerShoupaiVO(playerValueObject.getAllShoupai(),
 					playerValueObject.getTotalShoupai(), shoupaiIdListForSortList.get(0));
 		}
+		ying = panPlayerResult.getPlayerResult().isYing();
+		dizhu = panPlayerResult.getPlayerResult().isDizhu();
 		difen = panPlayerResult.getPlayerResult().getDifen();
-		beishu = panPlayerResult.getPlayerResult().getBeishu().getValue();
+		beishu = new DoudizhuBeishuVO(panPlayerResult.getPlayerResult().getBeishu());
+		zhadanCount = panPlayerResult.getPlayerResult().getZhadanCount();
 		score = panPlayerResult.getPlayerResult().getScore();
 		totalScore = panPlayerResult.getPlayerResult().getTotalScore();
 	}
@@ -79,11 +85,11 @@ public class DoudizhuPanPlayerResultVO {
 		this.difen = difen;
 	}
 
-	public int getBeishu() {
+	public DoudizhuBeishuVO getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishuVO beishu) {
 		this.beishu = beishu;
 	}
 
@@ -101,6 +107,30 @@ public class DoudizhuPanPlayerResultVO {
 
 	public void setTotalScore(int totalScore) {
 		this.totalScore = totalScore;
+	}
+
+	public boolean isDizhu() {
+		return dizhu;
+	}
+
+	public void setDizhu(boolean dizhu) {
+		this.dizhu = dizhu;
+	}
+
+	public int getZhadanCount() {
+		return zhadanCount;
+	}
+
+	public void setZhadanCount(int zhadanCount) {
+		this.zhadanCount = zhadanCount;
+	}
+
+	public boolean isYing() {
+		return ying;
+	}
+
+	public void setYing(boolean ying) {
+		this.ying = ying;
 	}
 
 }

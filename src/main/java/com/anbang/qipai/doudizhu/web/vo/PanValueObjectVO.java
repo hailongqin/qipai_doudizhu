@@ -3,6 +3,7 @@ package com.anbang.qipai.doudizhu.web.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
 import com.dml.doudizhu.pan.PanValueObject;
 import com.dml.puke.pai.PaiListValueObject;
@@ -41,6 +42,21 @@ public class PanValueObjectVO {
 		doudizhuPlayerList = new ArrayList<>();
 		panValueObject.getDoudizhuPlayerList().forEach((doudizhuPlayer) -> doudizhuPlayerList
 				.add(new DoudizhuPlayerValueObjectVO(doudizhuPlayer, gameLatestInfoDbo.getPlayerQiangdizhuInfos())));
+		doudizhuPlayerList.forEach((doudizhuPlayer) -> {
+			if (doudizhuPlayer.getId().equals(dizhuPlayerId)) {
+				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4) {
+					doudizhuPlayer.setNoPaiWarning(true);
+				}
+			} else {
+				int rangPai = gameLatestInfoDbo.getQiangdizhuCount();
+				if (rangPai > 4) {
+					rangPai = 4;
+				}
+				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + rangPai) {
+					doudizhuPlayer.setNoPaiWarning(true);
+				}
+			}
+		});
 		paiListValueObject = panValueObject.getPaiListValueObject();
 		dachuPaiZuList = panValueObject.getDachuPaiZuList();
 		actionPosition = panValueObject.getActionPosition();
@@ -48,6 +64,20 @@ public class PanValueObjectVO {
 		dizhuPlayerId = panValueObject.getDizhuPlayerId();
 		beishu = gameLatestInfoDbo.getBeishu();
 		dipaiList = gameLatestInfoDbo.getDipaiList();
+	}
+
+	public PanValueObjectVO(PanValueObject panValueObject, GameInfoDbo gameInfoDbo) {
+		no = panValueObject.getNo();
+		doudizhuPlayerList = new ArrayList<>();
+		panValueObject.getDoudizhuPlayerList().forEach((doudizhuPlayer) -> doudizhuPlayerList
+				.add(new DoudizhuPlayerValueObjectVO(doudizhuPlayer, gameInfoDbo.getPlayerQiangdizhuInfos())));
+		paiListValueObject = panValueObject.getPaiListValueObject();
+		dachuPaiZuList = panValueObject.getDachuPaiZuList();
+		actionPosition = panValueObject.getActionPosition();
+		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
+		dizhuPlayerId = panValueObject.getDizhuPlayerId();
+		beishu = gameInfoDbo.getBeishu();
+		dipaiList = gameInfoDbo.getDipaiList();
 	}
 
 	public String getDizhuPlayerId() {

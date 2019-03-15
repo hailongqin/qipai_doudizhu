@@ -216,13 +216,15 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 						int length = zhadanSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((DanGeZhadanDianShuZu) zhadanSolutionList.get(i).getDianShuZu()).getDianShu()
-									.compareTo(danGeZhadanDianShuZu.getDianShu()) > 0) {
-								zhadanSolutionList.add(i, solution);
-								break;
-							}
-							if (i == length - 1) {
-								zhadanSolutionList.add(solution);
+							if (zhadanSolutionList.get(i).getDianShuZu() instanceof DanGeZhadanDianShuZu) {
+								if (((DanGeZhadanDianShuZu) zhadanSolutionList.get(i).getDianShuZu()).getDianShu()
+										.compareTo(danGeZhadanDianShuZu.getDianShu()) > 0) {
+									zhadanSolutionList.add(i, solution);
+									break;
+								}
+								if (i == length - 1) {
+									zhadanSolutionList.add(solution);
+								}
 							}
 							i++;
 						}

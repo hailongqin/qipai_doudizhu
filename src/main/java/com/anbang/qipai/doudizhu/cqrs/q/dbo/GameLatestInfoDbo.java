@@ -12,6 +12,7 @@ import com.dml.puke.pai.PukePai;
 public class GameLatestInfoDbo {
 	private String id;
 	private int beishu;
+	private int qiangdizhuCount;
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
 
@@ -23,6 +24,7 @@ public class GameLatestInfoDbo {
 			GameInfo gameInfo) {
 		id = pukeGame.getId();
 		beishu = gameInfo.getBeishu();
+		qiangdizhuCount = gameInfo.getQiangdizhuCount();
 		dipaiList = gameInfo.getDipaiList();
 		playerQiangdizhuInfos = new ArrayList<>();
 		for (String playerId : playerQiangdizhuMap.keySet()) {
@@ -31,6 +33,14 @@ public class GameLatestInfoDbo {
 			player.setState(playerQiangdizhuMap.get(playerId));
 			playerQiangdizhuInfos.add(player);
 		}
+	}
+
+	public int getQiangdizhuCount() {
+		return qiangdizhuCount;
+	}
+
+	public void setQiangdizhuCount(int qiangdizhuCount) {
+		this.qiangdizhuCount = qiangdizhuCount;
 	}
 
 	public String getId() {

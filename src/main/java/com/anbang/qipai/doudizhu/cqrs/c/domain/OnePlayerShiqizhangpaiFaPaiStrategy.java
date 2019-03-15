@@ -51,6 +51,7 @@ public class OnePlayerShiqizhangpaiFaPaiStrategy implements FaPaiStrategy {
 				player.addShouPai(pukePai);
 			}
 		}
+		currentPan.setAvaliablePaiList(avaliablePaiList);
 	}
 
 	public int getRenshu() {

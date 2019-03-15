@@ -8,6 +8,7 @@ import com.dml.puke.pai.PukePai;
 public class GameInfo {
 
 	private int beishu = 1;
+	private int qiangdizhuCount;
 	private List<PukePai> dipaiList = new ArrayList<>();
 	private long actionTime;
 
@@ -17,6 +18,14 @@ public class GameInfo {
 
 	public void setBeishu(int beishu) {
 		this.beishu = beishu;
+	}
+
+	public int getQiangdizhuCount() {
+		return qiangdizhuCount;
+	}
+
+	public void setQiangdizhuCount(int qiangdizhuCount) {
+		this.qiangdizhuCount = qiangdizhuCount;
 	}
 
 	public List<PukePai> getDipaiList() {

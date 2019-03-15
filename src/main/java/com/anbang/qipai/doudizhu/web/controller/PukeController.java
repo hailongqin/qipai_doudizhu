@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
+import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
@@ -35,7 +36,6 @@ import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
 import com.anbang.qipai.doudizhu.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.doudizhu.websocket.QueryScope;
 import com.dml.doudizhu.pan.PanActionFrame;
-import com.dml.mpgame.game.Playing;
 import com.dml.mpgame.game.player.GamePlayerOnlineState;
 
 @RestController
@@ -338,7 +338,7 @@ public class PukeController {
 
 		List<QueryScope> queryScopes = new ArrayList<>();
 		queryScopes.add(QueryScope.gameInfo);
-		if (readyToNextPanResult.getPukeGame().getState().name().equals(Playing.name)) {
+		if (readyToNextPanResult.getPukeGame().getState().name().equals(Qiangdizhu.name)) {
 			queryScopes.add(QueryScope.panForMe);
 		}
 		data.put("queryScopes", queryScopes);

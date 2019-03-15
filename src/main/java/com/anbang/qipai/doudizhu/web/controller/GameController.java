@@ -17,7 +17,10 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
 import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameFinishVoteDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameInfoDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanActionFrameDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGamePlayerDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukeGameQueryService;
@@ -32,6 +35,8 @@ import com.anbang.qipai.doudizhu.plan.service.MemberGoldBalanceService;
 import com.anbang.qipai.doudizhu.web.vo.CommonVO;
 import com.anbang.qipai.doudizhu.web.vo.GameFinishVoteVO;
 import com.anbang.qipai.doudizhu.web.vo.GameVO;
+import com.anbang.qipai.doudizhu.web.vo.PanActionFrameVO;
+import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
 import com.anbang.qipai.doudizhu.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.doudizhu.websocket.QueryScope;
 import com.dml.mpgame.game.Canceled;
@@ -660,6 +665,19 @@ public class GameController {
 		CommonVO vo = new CommonVO();
 		Map data = new HashMap();
 		vo.setData(data);
+		PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+		pukeGameDbo.setPanNo(panNo);
+		GameVO gameVO = new GameVO(pukeGameDbo);
+		data.put("game", gameVO);
+		List<PanActionFrameVO> frameVOList = new ArrayList<>();
+		List<PanActionFrameDbo> frameList = pukePlayQueryService.findPanActionFrameDboForBackPlay(gameId, panNo);
+		List<GameInfoDbo> infoList = pukePlayQueryService.findGameInfoDboForBackPlay(gameId, panNo);
+		for (int i = 0; i < frameList.size(); i++) {
+			frameVOList.add(new PanActionFrameVO(frameList.get(i).getPanActionFrame(), infoList.get(i)));
+		}
+		data.put("framelist", frameVOList);
+		PanResultDbo panResultDbo = pukePlayQueryService.findPanResultDbo(gameId, panNo);
+		data.put("panResult", new PanResultVO(panResultDbo, pukeGameDbo));
 		return vo;
 	}
 

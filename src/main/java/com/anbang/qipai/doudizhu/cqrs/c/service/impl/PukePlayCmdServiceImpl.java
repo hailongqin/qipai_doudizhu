@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGame;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
@@ -51,6 +52,10 @@ public class PukePlayCmdServiceImpl extends CmdServiceBase implements PukePlayCm
 		if (pukeGame.getState().name().equals(Qiangdizhu.name)) {// 开始下一盘了
 			PanActionFrame firstActionFrame = pukeGame.getJu().getCurrentPan().findLatestActionFrame();
 			readyToNextPanResult.setFirstActionFrame(firstActionFrame);
+			readyToNextPanResult.setPlayerQiangdizhuMap(pukeGame.getQiangdizhuInfo());
+			GameInfo gameInfo = new GameInfo();
+			gameInfo.setActionTime(System.currentTimeMillis());
+			readyToNextPanResult.setGameInfo(gameInfo);
 		}
 		readyToNextPanResult.setPukeGame(new PukeGameValueObject(pukeGame));
 		return readyToNextPanResult;

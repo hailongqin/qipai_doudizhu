@@ -5,8 +5,10 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.DoudizhuBeishu;
 public class DoudizhuPanPlayerResult {
 	private String playerId;
 	private boolean ying;
+	private boolean dizhu;
 	private int difen;
 	private DoudizhuBeishu beishu;
+	private int zhadanCount;
 	private int score;// 一盘结算分
 	private int totalScore;// 总分
 
@@ -26,6 +28,14 @@ public class DoudizhuPanPlayerResult {
 		this.ying = ying;
 	}
 
+	public boolean isDizhu() {
+		return dizhu;
+	}
+
+	public void setDizhu(boolean dizhu) {
+		this.dizhu = dizhu;
+	}
+
 	public int getDifen() {
 		return difen;
 	}
@@ -40,6 +50,14 @@ public class DoudizhuPanPlayerResult {
 
 	public void setBeishu(DoudizhuBeishu beishu) {
 		this.beishu = beishu;
+	}
+
+	public int getZhadanCount() {
+		return zhadanCount;
+	}
+
+	public void setZhadanCount(int zhadanCount) {
+		this.zhadanCount = zhadanCount;
 	}
 
 	public int getScore() {

@@ -6,6 +6,8 @@ import com.dml.doudizhu.pan.PanResult;
 
 public class DoudizhuPanResult extends PanResult {
 
+	private boolean dizhuying;
+
 	private List<DoudizhuPanPlayerResult> panPlayerResultList;
 
 	public List<DoudizhuPanPlayerResult> getPanPlayerResultList() {
@@ -14,6 +16,14 @@ public class DoudizhuPanResult extends PanResult {
 
 	public void setPanPlayerResultList(List<DoudizhuPanPlayerResult> panPlayerResultList) {
 		this.panPlayerResultList = panPlayerResultList;
+	}
+
+	public boolean isDizhuying() {
+		return dizhuying;
+	}
+
+	public void setDizhuying(boolean dizhuying) {
+		this.dizhuying = dizhuying;
 	}
 
 }

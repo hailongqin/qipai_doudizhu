@@ -6,11 +6,12 @@ import java.util.List;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.DoudizhuPanPlayerResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
-import com.dml.doudizhu.player.DoudizhuPlayerValueObject;
 
 public class PanResultVO {
 
 	private List<DoudizhuPanPlayerResultVO> playerResultList;
+
+	private boolean dizhuying;
 
 	private int panNo;
 
@@ -26,22 +27,14 @@ public class PanResultVO {
 
 	public PanResultVO(PanResultDbo panResultDbo, PukeGameDbo pukeGameDbo) {
 		List<DoudizhuPanPlayerResultDbo> list = panResultDbo.getPlayerResultList();
-		List<DoudizhuPlayerValueObject> players = panResultDbo.getPanActionFrame().getPanAfterAction()
-				.getDoudizhuPlayerList();
+		playerResultList = new ArrayList<>();
 		if (list != null) {
-			playerResultList = new ArrayList<>(list.size());
 			list.forEach((panPlayerResult) -> {
-				DoudizhuPlayerValueObject doudizhuPlayer = null;
-				for (DoudizhuPlayerValueObject player : players) {
-					if (player.getId().equals(panPlayerResult.getPlayerId())) {
-						doudizhuPlayer = player;
-						break;
-					}
-				}
 				playerResultList.add(new DoudizhuPanPlayerResultVO(
-						pukeGameDbo.findPlayer(panPlayerResult.getPlayerId()), panPlayerResult, doudizhuPlayer));
+						pukeGameDbo.findPlayer(panPlayerResult.getPlayerId()), panPlayerResult));
 			});
 		}
+		dizhuying = panResultDbo.isDizhuying();
 		panNo = panResultDbo.getPanNo();
 		finishTime = panResultDbo.getFinishTime();
 		lastPanActionFrame = new PanActionFrameVO(panResultDbo.getPanActionFrame());
@@ -54,6 +47,14 @@ public class PanResultVO {
 
 	public void setPlayerResultList(List<DoudizhuPanPlayerResultVO> playerResultList) {
 		this.playerResultList = playerResultList;
+	}
+
+	public boolean isDizhuying() {
+		return dizhuying;
+	}
+
+	public void setDizhuying(boolean dizhuying) {
+		this.dizhuying = dizhuying;
 	}
 
 	public int getPanNo() {

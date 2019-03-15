@@ -11,6 +11,7 @@ public class PanResultDbo {
 	private String id;
 	private String gameId;
 	private int panNo;
+	private boolean dizhuying;
 	private List<DoudizhuPanPlayerResultDbo> playerResultList;
 	private long finishTime;
 	private PanActionFrame panActionFrame;
@@ -23,6 +24,7 @@ public class PanResultDbo {
 	public PanResultDbo(String gameId, DoudizhuPanResult panResult) {
 		this.gameId = gameId;
 		panNo = panResult.getPan().getNo();
+		dizhuying = panResult.isDizhuying();
 		playerResultList = new ArrayList<>();
 		for (DoudizhuPanPlayerResult playerResult : panResult.getPanPlayerResultList()) {
 			DoudizhuPanPlayerResultDbo dbo = new DoudizhuPanPlayerResultDbo();
@@ -56,6 +58,14 @@ public class PanResultDbo {
 
 	public void setPanNo(int panNo) {
 		this.panNo = panNo;
+	}
+
+	public boolean isDizhuying() {
+		return dizhuying;
+	}
+
+	public void setDizhuying(boolean dizhuying) {
+		this.dizhuying = dizhuying;
 	}
 
 	public List<DoudizhuPanPlayerResultDbo> getPlayerResultList() {

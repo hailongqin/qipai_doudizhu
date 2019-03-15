@@ -201,6 +201,11 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 				}
 			}
 		}
+		if (node.getDizhuId() != null) {
+			for (String pid : currentPan.sortedPlayerIdList()) {
+				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.afterQiangdizhu);
+			}
+		}
 		return node.getDizhuId();
 	}
 
