@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
+import com.anbang.qipai.doudizhu.websocket.WatchQueryScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,6 +66,9 @@ public class PukeController {
 
 	@Autowired
 	private GamePlayWsNotifier wsNotifier;
+
+	@Autowired
+	private GameCmdService gameCmdService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -186,6 +193,7 @@ public class PukeController {
 		}
 
 		PukeActionResult pukeActionResult;
+		String endFlag = "query";
 		try {
 			pukeActionResult = pukePlayCmdService.da(playerId, new ArrayList<>(paiIds), dianshuZuheIdx,
 					System.currentTimeMillis());
@@ -213,9 +221,11 @@ public class PukeController {
 
 				gameMsgService.gameFinished(gameId);
 				queryScopes.add(QueryScope.juResult.name());
+				endFlag = WatchQueryScope.watchEnd.name();
 			} else {
 				queryScopes.add(QueryScope.gameInfo.name());
 				queryScopes.add(QueryScope.panResult.name());
+				endFlag = WatchQueryScope.panResult.name();
 			}
 			PanResultDbo panResultDbo = pukePlayQueryService.findPanResultDbo(gameId,
 					pukeActionResult.getPanResult().getPan().getNo());
@@ -235,6 +245,9 @@ public class PukeController {
 				}
 			}
 		}
+
+		// 通知观战者
+		hintWatcher(pukeActionResult.getPukeGame().getId(), endFlag);
 
 		long endTime = System.currentTimeMillis();
 		logger.info("action:da," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "paiIds:" + paiIds
@@ -292,6 +305,9 @@ public class PukeController {
 			}
 		}
 
+		// 通知观战者
+		hintWatcher(pukeActionResult.getPukeGame().getId(), "query");
+
 		long endTime = System.currentTimeMillis();
 		logger.info("action:guo," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "success:"
 				+ vo.isSuccess() + ",msg:" + vo.getMsg() + "," + "endTime:" + endTime + "," + "use:"
@@ -343,6 +359,20 @@ public class PukeController {
 		}
 		data.put("queryScopes", queryScopes);
 		return vo;
+	}
+
+	/**
+	 * 通知观战者
+	 */
+	private void hintWatcher(String gameId, String flag) {
+		Map<String, Object> map = gameCmdService.getwatch(gameId);
+		if (!CollectionUtils.isEmpty(map)) {
+			List<String> playerIds = map.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
+			wsNotifier.notifyToWatchQuery(playerIds, flag);
+			if (WatchQueryScope.watchEnd.name().equals(flag)) {
+				gameCmdService.recycleWatch(gameId);
+			}
+		}
 	}
 
 }
