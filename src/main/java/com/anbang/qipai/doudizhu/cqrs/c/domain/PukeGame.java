@@ -92,7 +92,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 			result.setPanActionFrame(frame);
 		}
 		beishu.calculate();
-		gameInfo.setBeishu(beishu.getValue());
+		gameInfo.setBeishu(beishu);
 		result.setPukeGame(new PukeGameValueObject(this));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
 		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
@@ -172,6 +172,8 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		gameInfo.setActionTime(actionTime);
 		result.setGameInfo(gameInfo);
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
+		ZhadanDaActionStatisticsListener zhadanDaActionStatisticsListener = ju.getActionStatisticsListenerManager()
+				.findDaListener(ZhadanDaActionStatisticsListener.class);
 		DoudizhuBeishu beishu = new DoudizhuBeishu();
 		beishu.setRenshu(renshu);
 		beishu.setQiangdizhuCount(qiangdizhuDizhuDeterminer.getQiangdizhuCount());
@@ -185,8 +187,9 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		beishu.setDipaiXiaoyuShi(sanzhangDipaiDeterminer.dipaiXiaoyushi());
 		beishu.setDipaihasXiaowang(sanzhangDipaiDeterminer.dipaiHasXiaowang());
 		beishu.setDipaihasDawang(sanzhangDipaiDeterminer.dipaiHasDawang());
+		beishu.setDachuZhadanCount(zhadanDaActionStatisticsListener.getDachuZhadanCount());
 		beishu.calculate();
-		gameInfo.setBeishu(beishu.getValue());
+		gameInfo.setBeishu(beishu);
 		gameInfo.setDipaiList(new ArrayList<>(sanzhangDipaiDeterminer.getDipaiList()));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
 		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
@@ -217,6 +220,8 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		gameInfo.setActionTime(actionTime);
 		result.setGameInfo(gameInfo);
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
+		ZhadanDaActionStatisticsListener zhadanDaActionStatisticsListener = ju.getActionStatisticsListenerManager()
+				.findDaListener(ZhadanDaActionStatisticsListener.class);
 		DoudizhuBeishu beishu = new DoudizhuBeishu();
 		beishu.setRenshu(renshu);
 		beishu.setQiangdizhuCount(qiangdizhuDizhuDeterminer.getQiangdizhuCount());
@@ -230,8 +235,9 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		beishu.setDipaiXiaoyuShi(sanzhangDipaiDeterminer.dipaiXiaoyushi());
 		beishu.setDipaihasXiaowang(sanzhangDipaiDeterminer.dipaiHasXiaowang());
 		beishu.setDipaihasDawang(sanzhangDipaiDeterminer.dipaiHasDawang());
+		beishu.setDachuZhadanCount(zhadanDaActionStatisticsListener.getDachuZhadanCount());
 		beishu.calculate();
-		gameInfo.setBeishu(beishu.getValue());
+		gameInfo.setBeishu(beishu);
 		gameInfo.setDipaiList(new ArrayList<>(sanzhangDipaiDeterminer.getDipaiList()));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
 		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());

@@ -2,6 +2,7 @@ package com.anbang.qipai.doudizhu.cqrs.c.service.impl;
 
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.DoudizhuBeishu;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGame;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
@@ -146,6 +147,8 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 			result.setPlayerQiangdizhuMap(pukeGame.getQiangdizhuInfo());
 			GameInfo gameInfo = new GameInfo();
 			gameInfo.setActionTime(currentTime);
+			gameInfo.setBeishu(new DoudizhuBeishu());
+			gameInfo.getBeishu().setRenshu(pukeGame.getRenshu());
 			result.setGameInfo(gameInfo);
 		}
 		return result;

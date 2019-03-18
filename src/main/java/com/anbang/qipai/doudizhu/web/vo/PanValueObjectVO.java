@@ -19,7 +19,7 @@ public class PanValueObjectVO {
 	private String dizhuPlayerId;// 地主id
 	private Position actionPosition;
 	private String latestDapaiPlayerId;
-	private int beishu;
+	private DoudizhuBeishuVO beishu;
 	private List<PukePai> dipaiList;
 
 	public PanValueObjectVO() {
@@ -62,7 +62,7 @@ public class PanValueObjectVO {
 		actionPosition = panValueObject.getActionPosition();
 		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
 		dizhuPlayerId = panValueObject.getDizhuPlayerId();
-		beishu = gameLatestInfoDbo.getBeishu();
+		beishu = new DoudizhuBeishuVO(gameLatestInfoDbo.getBeishu());
 		dipaiList = gameLatestInfoDbo.getDipaiList();
 	}
 
@@ -76,7 +76,7 @@ public class PanValueObjectVO {
 		actionPosition = panValueObject.getActionPosition();
 		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
 		dizhuPlayerId = panValueObject.getDizhuPlayerId();
-		beishu = gameInfoDbo.getBeishu();
+		beishu = new DoudizhuBeishuVO(gameInfoDbo.getBeishu());
 		dipaiList = gameInfoDbo.getDipaiList();
 	}
 
@@ -136,11 +136,11 @@ public class PanValueObjectVO {
 		this.latestDapaiPlayerId = latestDapaiPlayerId;
 	}
 
-	public int getBeishu() {
+	public DoudizhuBeishuVO getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishuVO beishu) {
 		this.beishu = beishu;
 	}
 

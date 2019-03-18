@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.DoudizhuBeishu;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
@@ -21,7 +22,7 @@ public class GameInfoDbo {
 	private int panNo;
 	private int actionNo;
 	private long actionTime;
-	private int beishu;
+	private DoudizhuBeishu beishu;
 	private int qiangdizhuCount;
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
@@ -96,11 +97,11 @@ public class GameInfoDbo {
 		this.actionTime = actionTime;
 	}
 
-	public int getBeishu() {
+	public DoudizhuBeishu getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishu beishu) {
 		this.beishu = beishu;
 	}
 

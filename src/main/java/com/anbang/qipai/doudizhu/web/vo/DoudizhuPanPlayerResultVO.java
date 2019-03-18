@@ -23,7 +23,8 @@ public class DoudizhuPanPlayerResultVO {
 
 	}
 
-	public DoudizhuPanPlayerResultVO(PukeGamePlayerDbo playerDbo, DoudizhuPanPlayerResultDbo panPlayerResult) {
+	public DoudizhuPanPlayerResultVO(PukeGamePlayerDbo playerDbo, DoudizhuPanPlayerResultDbo panPlayerResult,
+			String yingjiaPlayerId) {
 		playerId = playerDbo.getPlayerId();
 		nickname = playerDbo.getNickname();
 		headimgurl = playerDbo.getHeadimgurl();
@@ -40,6 +41,10 @@ public class DoudizhuPanPlayerResultVO {
 		dizhu = panPlayerResult.getPlayerResult().isDizhu();
 		difen = panPlayerResult.getPlayerResult().getDifen();
 		beishu = new DoudizhuBeishuVO(panPlayerResult.getPlayerResult().getBeishu());
+		if (!playerId.equals(yingjiaPlayerId)) {
+			beishu.setChuntian(false);
+			beishu.setFanchuntian(false);
+		}
 		zhadanCount = panPlayerResult.getPlayerResult().getZhadanCount();
 		score = panPlayerResult.getPlayerResult().getScore();
 		totalScore = panPlayerResult.getPlayerResult().getTotalScore();

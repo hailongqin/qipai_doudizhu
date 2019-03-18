@@ -7,7 +7,7 @@ import com.anbang.qipai.doudizhu.cqrs.q.dbo.PlayerQiangdizhuInfoDbo;
 import com.dml.puke.pai.PukePai;
 
 public class GameInfoVO {
-	private int beishu;
+	private DoudizhuBeishuVO beishu;
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
 
@@ -16,16 +16,16 @@ public class GameInfoVO {
 	}
 
 	public GameInfoVO(GameLatestInfoDbo gameLatestInfoDbo) {
-		beishu = gameLatestInfoDbo.getBeishu();
+		beishu = new DoudizhuBeishuVO(gameLatestInfoDbo.getBeishu());
 		dipaiList = gameLatestInfoDbo.getDipaiList();
 		playerQiangdizhuInfos = gameLatestInfoDbo.getPlayerQiangdizhuInfos();
 	}
 
-	public int getBeishu() {
+	public DoudizhuBeishuVO getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishuVO beishu) {
 		this.beishu = beishu;
 	}
 

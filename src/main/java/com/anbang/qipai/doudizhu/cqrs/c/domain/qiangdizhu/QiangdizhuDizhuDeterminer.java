@@ -158,6 +158,7 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			}
 		}
 		node = root;
+		qiangdizhuCount = 0;
 	}
 
 	@Override

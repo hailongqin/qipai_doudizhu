@@ -13,6 +13,8 @@ public class PanResultVO {
 
 	private boolean dizhuying;
 
+	private String yingjiaPlayerId;// 赢家id
+
 	private int panNo;
 
 	private long finishTime;
@@ -28,13 +30,14 @@ public class PanResultVO {
 	public PanResultVO(PanResultDbo panResultDbo, PukeGameDbo pukeGameDbo) {
 		List<DoudizhuPanPlayerResultDbo> list = panResultDbo.getPlayerResultList();
 		playerResultList = new ArrayList<>();
+		dizhuying = panResultDbo.isDizhuying();
+		yingjiaPlayerId = panResultDbo.getYingjiaPlayerId();
 		if (list != null) {
 			list.forEach((panPlayerResult) -> {
 				playerResultList.add(new DoudizhuPanPlayerResultVO(
-						pukeGameDbo.findPlayer(panPlayerResult.getPlayerId()), panPlayerResult));
+						pukeGameDbo.findPlayer(panPlayerResult.getPlayerId()), panPlayerResult, yingjiaPlayerId));
 			});
 		}
-		dizhuying = panResultDbo.isDizhuying();
 		panNo = panResultDbo.getPanNo();
 		finishTime = panResultDbo.getFinishTime();
 		lastPanActionFrame = new PanActionFrameVO(panResultDbo.getPanActionFrame());
@@ -87,6 +90,14 @@ public class PanResultVO {
 
 	public void setGameInfoVO(GameInfoVO gameInfoVO) {
 		this.gameInfoVO = gameInfoVO;
+	}
+
+	public String getYingjiaPlayerId() {
+		return yingjiaPlayerId;
+	}
+
+	public void setYingjiaPlayerId(String yingjiaPlayerId) {
+		this.yingjiaPlayerId = yingjiaPlayerId;
 	}
 
 }

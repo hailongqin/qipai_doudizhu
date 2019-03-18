@@ -17,7 +17,7 @@ public class DoudizhuBeishu {
 	private int dachuZhadanCount;
 	private boolean chuntian;
 	private boolean fanchuntian;
-	private int value;
+	private int value = 1;
 
 	public void calculate() {
 		int beishu = 1;

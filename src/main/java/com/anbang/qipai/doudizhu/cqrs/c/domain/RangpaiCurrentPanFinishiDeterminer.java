@@ -23,11 +23,13 @@ public class RangpaiCurrentPanFinishiDeterminer implements CurrentPanFinishiDete
 		for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
 			if (player.getId().equals(dizhu)) {
 				if (player.getAllShoupai().size() == 0) {
+					currentPan.setYingjiaPlayerId(player.getId());
 					return true;
 				}
 			} else {
 				int rangpai = qiangdizhuCount > 4 ? 4 : qiangdizhuCount;
 				if (player.getAllShoupai().size() <= rangpai) {
+					currentPan.setYingjiaPlayerId(player.getId());
 					return true;
 				}
 			}

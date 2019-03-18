@@ -7,16 +7,16 @@ import com.dml.puke.pai.PukePai;
 
 public class GameInfo {
 
-	private int beishu = 1;
+	private DoudizhuBeishu beishu;
 	private int qiangdizhuCount;
 	private List<PukePai> dipaiList = new ArrayList<>();
 	private long actionTime;
 
-	public int getBeishu() {
+	public DoudizhuBeishu getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishu beishu) {
 		this.beishu = beishu;
 	}
 

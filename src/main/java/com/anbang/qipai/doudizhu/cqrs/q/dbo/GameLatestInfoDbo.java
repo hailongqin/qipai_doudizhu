@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.anbang.qipai.doudizhu.cqrs.c.domain.DoudizhuBeishu;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.GameInfo;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.PlayerQiangdizhuState;
@@ -11,7 +12,7 @@ import com.dml.puke.pai.PukePai;
 
 public class GameLatestInfoDbo {
 	private String id;
-	private int beishu;
+	private DoudizhuBeishu beishu;
 	private int qiangdizhuCount;
 	private List<PukePai> dipaiList;
 	private List<PlayerQiangdizhuInfoDbo> playerQiangdizhuInfos;
@@ -51,11 +52,11 @@ public class GameLatestInfoDbo {
 		this.id = id;
 	}
 
-	public int getBeishu() {
+	public DoudizhuBeishu getBeishu() {
 		return beishu;
 	}
 
-	public void setBeishu(int beishu) {
+	public void setBeishu(DoudizhuBeishu beishu) {
 		this.beishu = beishu;
 	}
 

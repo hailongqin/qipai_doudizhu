@@ -12,6 +12,7 @@ public class PanResultDbo {
 	private String gameId;
 	private int panNo;
 	private boolean dizhuying;
+	private String yingjiaPlayerId;// 赢家id
 	private List<DoudizhuPanPlayerResultDbo> playerResultList;
 	private long finishTime;
 	private PanActionFrame panActionFrame;
@@ -25,6 +26,7 @@ public class PanResultDbo {
 		this.gameId = gameId;
 		panNo = panResult.getPan().getNo();
 		dizhuying = panResult.isDizhuying();
+		yingjiaPlayerId = panResult.getYingjiaPlayerId();
 		playerResultList = new ArrayList<>();
 		for (DoudizhuPanPlayerResult playerResult : panResult.getPanPlayerResultList()) {
 			DoudizhuPanPlayerResultDbo dbo = new DoudizhuPanPlayerResultDbo();
@@ -98,6 +100,14 @@ public class PanResultDbo {
 
 	public void setGameLatestInfoDbo(GameLatestInfoDbo gameLatestInfoDbo) {
 		this.gameLatestInfoDbo = gameLatestInfoDbo;
+	}
+
+	public String getYingjiaPlayerId() {
+		return yingjiaPlayerId;
+	}
+
+	public void setYingjiaPlayerId(String yingjiaPlayerId) {
+		this.yingjiaPlayerId = yingjiaPlayerId;
 	}
 
 }

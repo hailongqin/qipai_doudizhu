@@ -131,6 +131,7 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 			}
 		});
 		DoudizhuPanResult panResult = new DoudizhuPanResult();
+		panResult.setYingjiaPlayerId(currentPan.getYingjiaPlayerId());
 		panResult.setDizhuying(dizhuying);
 		panResult.setPan(new PanValueObject(currentPan));
 		panResult.setPanPlayerResultList(panPlayerResultList);
