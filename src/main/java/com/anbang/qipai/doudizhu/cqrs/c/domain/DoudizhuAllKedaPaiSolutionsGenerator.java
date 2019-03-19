@@ -11,6 +11,7 @@ import com.dml.doudizhu.pai.dianshuzu.HuojianDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaierDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SidaierDianShuZu;
+import com.dml.doudizhu.pai.dianshuzu.SidaiyiDianShuZu;
 import com.dml.doudizhu.player.action.da.AllKedaPaiSolutionsGenerator;
 import com.dml.doudizhu.player.action.da.solution.DaPaiDianShuSolution;
 import com.dml.puke.pai.PukePai;
@@ -105,7 +106,14 @@ public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutions
 		sandaierSolution.forEach((solution) -> {
 			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
 		});
-		// 四带二
+		// 四带二单张
+		List<SidaiyiDianShuZu> sidaiyiList = DoudizhuSolutionGenerator.generateAllSidaiyiDianShuZu(dianShuAmountArray);
+		List<DaPaiDianShuSolution> sidaiyiSolution = DoudizhuSolutionGenerator
+				.calculateSidaiyiDaPaiDianShuSolution(sidaiyiList);
+		sidaiyiSolution.forEach((solution) -> {
+			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
+		});
+		// 四带二对子
 		List<SidaierDianShuZu> sidaierList = DoudizhuSolutionGenerator.generateAllSidaierDianShuZu(dianShuAmountArray);
 		List<DaPaiDianShuSolution> sidaierSolution = DoudizhuSolutionGenerator
 				.calculateSidaierDaPaiDianShuSolution(sidaierList);

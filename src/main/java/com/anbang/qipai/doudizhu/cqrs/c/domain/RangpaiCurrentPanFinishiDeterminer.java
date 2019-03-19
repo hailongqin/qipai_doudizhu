@@ -27,10 +27,12 @@ public class RangpaiCurrentPanFinishiDeterminer implements CurrentPanFinishiDete
 					return true;
 				}
 			} else {
-				int rangpai = qiangdizhuCount > 4 ? 4 : qiangdizhuCount;
-				if (player.getAllShoupai().size() <= rangpai) {
-					currentPan.setYingjiaPlayerId(player.getId());
-					return true;
+				if (currentPan.getDoudizhuPlayerIdMajiangPlayerMap().size() == 2) {
+					int rangpai = qiangdizhuCount - 1 > 4 ? 4 : qiangdizhuCount;
+					if (player.getAllShoupai().size() <= rangpai) {
+						currentPan.setYingjiaPlayerId(player.getId());
+						return true;
+					}
 				}
 			}
 		}

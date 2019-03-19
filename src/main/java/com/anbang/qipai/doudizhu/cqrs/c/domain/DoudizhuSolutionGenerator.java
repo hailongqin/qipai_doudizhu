@@ -9,6 +9,7 @@ import com.dml.doudizhu.pai.dianshuzu.HuojianDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaierDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SidaierDianShuZu;
+import com.dml.doudizhu.pai.dianshuzu.SidaiyiDianShuZu;
 import com.dml.doudizhu.player.action.da.solution.DaPaiDianShuSolution;
 import com.dml.puke.pai.DianShu;
 import com.dml.puke.wanfa.dianshu.dianshuzu.DanGeZhadanDianShuZu;
@@ -437,21 +438,28 @@ public class DoudizhuSolutionGenerator {
 	}
 
 	/**
-	 * 生成四带二点数组
+	 * 生成四带二单张点数组
 	 */
-	public static List<SidaierDianShuZu> generateAllSidaierDianShuZu(int[] dianShuAmountArray) {
-		List<SidaierDianShuZu> sidaierList = new ArrayList<>();
+	public static List<SidaiyiDianShuZu> generateAllSidaiyiDianShuZu(int[] dianShuAmountArray) {
+		List<SidaiyiDianShuZu> sidaierList = new ArrayList<>();
 		for (int i = 0; i < dianShuAmountArray.length; i++) {
 			int dianshuCount = dianShuAmountArray[i];
-			if (dianshuCount >= 3) {
+			if (dianshuCount >= 4) {
 				int[] amountArray = dianShuAmountArray.clone();
 				amountArray[i] = 0;
 				for (int j = 0; j < amountArray.length; j++) {
-					if (amountArray[j] > 1) {
-						DianShu dianshu = DianShu.getDianShuByOrdinal(i);
-						DianShu chibang = DianShu.getDianShuByOrdinal(j);
-						SidaierDianShuZu sidaierDianShuZu = new SidaierDianShuZu(dianshu, chibang);
-						sidaierList.add(sidaierDianShuZu);
+					if (amountArray[j] > 0) {
+						int[] amountArray1 = amountArray.clone();
+						amountArray1[j] -= 1;
+						for (int k = 0; k < amountArray1.length; k++) {
+							if (amountArray1[k] > 0) {
+								DianShu dianshu = DianShu.getDianShuByOrdinal(i);
+								DianShu chibang = DianShu.getDianShuByOrdinal(j);
+								DianShu chibanger = DianShu.getDianShuByOrdinal(k);
+								SidaiyiDianShuZu sidaiyiDianShuZu = new SidaiyiDianShuZu(dianshu, chibang, chibanger);
+								sidaierList.add(sidaiyiDianShuZu);
+							}
+						}
 					}
 				}
 			}
@@ -460,11 +468,67 @@ public class DoudizhuSolutionGenerator {
 	}
 
 	/**
-	 * 四带二打牌方案
+	 * 四带二单张打牌方案
+	 */
+	public static List<DaPaiDianShuSolution> calculateSidaiyiDaPaiDianShuSolution(List<SidaiyiDianShuZu> sidaiyiList) {
+		List<DaPaiDianShuSolution> solutionList = new ArrayList<>();
+		// 四带二单张
+		for (SidaiyiDianShuZu sidaiyiDianShuZu : sidaiyiList) {
+			DaPaiDianShuSolution solution = new DaPaiDianShuSolution();
+			solution.setDianShuZu(sidaiyiDianShuZu);
+			List<DianShu> dachuDianShuList = new ArrayList<>();
+			dachuDianShuList.add(sidaiyiDianShuZu.getDianshu());
+			dachuDianShuList.add(sidaiyiDianShuZu.getDianshu());
+			dachuDianShuList.add(sidaiyiDianShuZu.getDianshu());
+			dachuDianShuList.add(sidaiyiDianShuZu.getDianshu());
+
+			dachuDianShuList.add(sidaiyiDianShuZu.getChibang());
+			dachuDianShuList.add(sidaiyiDianShuZu.getChibanger());
+			DianShu[] dachuDianShuArray = new DianShu[dachuDianShuList.size()];
+			dachuDianShuList.toArray(dachuDianShuArray);
+			solution.setDachuDianShuArray(dachuDianShuArray);
+			solution.calculateDianshuZuheIdx();
+			solutionList.add(solution);
+		}
+		return solutionList;
+	}
+
+	/**
+	 * 生成四带二对子点数组
+	 */
+	public static List<SidaierDianShuZu> generateAllSidaierDianShuZu(int[] dianShuAmountArray) {
+		List<SidaierDianShuZu> sidaierList = new ArrayList<>();
+		for (int i = 0; i < dianShuAmountArray.length; i++) {
+			int dianshuCount = dianShuAmountArray[i];
+			if (dianshuCount >= 4) {
+				int[] amountArray = dianShuAmountArray.clone();
+				amountArray[i] = 0;
+				for (int j = 0; j < amountArray.length; j++) {
+					if (amountArray[j] > 1) {
+						int[] amountArray1 = amountArray.clone();
+						amountArray1[j] -= 2;
+						for (int k = 0; k < amountArray1.length; k++) {
+							if (amountArray1[k] > 1) {
+								DianShu dianshu = DianShu.getDianShuByOrdinal(i);
+								DianShu chibang = DianShu.getDianShuByOrdinal(j);
+								DianShu chibanger = DianShu.getDianShuByOrdinal(k);
+								SidaierDianShuZu sidaierDianShuZu = new SidaierDianShuZu(dianshu, chibang, chibanger);
+								sidaierList.add(sidaierDianShuZu);
+							}
+						}
+					}
+				}
+			}
+		}
+		return sidaierList;
+	}
+
+	/**
+	 * 四带二对子打牌方案
 	 */
 	public static List<DaPaiDianShuSolution> calculateSidaierDaPaiDianShuSolution(List<SidaierDianShuZu> sidaierList) {
 		List<DaPaiDianShuSolution> solutionList = new ArrayList<>();
-		// 四带二
+		// 四带二对子
 		for (SidaierDianShuZu sidaierDianShuZu : sidaierList) {
 			DaPaiDianShuSolution solution = new DaPaiDianShuSolution();
 			solution.setDianShuZu(sidaierDianShuZu);
@@ -475,7 +539,9 @@ public class DoudizhuSolutionGenerator {
 			dachuDianShuList.add(sidaierDianShuZu.getDianshu());
 
 			dachuDianShuList.add(sidaierDianShuZu.getChibang());
+			dachuDianShuList.add(sidaierDianShuZu.getChibanger());
 			dachuDianShuList.add(sidaierDianShuZu.getChibang());
+			dachuDianShuList.add(sidaierDianShuZu.getChibanger());
 			DianShu[] dachuDianShuArray = new DianShu[dachuDianShuList.size()];
 			dachuDianShuList.toArray(dachuDianShuArray);
 			solution.setDachuDianShuArray(dachuDianShuArray);

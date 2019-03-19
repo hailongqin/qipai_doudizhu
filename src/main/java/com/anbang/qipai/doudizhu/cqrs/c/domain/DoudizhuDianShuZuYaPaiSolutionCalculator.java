@@ -10,6 +10,7 @@ import com.dml.doudizhu.pai.dianshuzu.FeijidaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaierDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SidaierDianShuZu;
+import com.dml.doudizhu.pai.dianshuzu.SidaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.comparator.ChibangDianShuZuComparator;
 import com.dml.doudizhu.pai.dianshuzu.comparator.FeijiDianShuZuComparator;
 import com.dml.doudizhu.player.action.da.DianShuZuYaPaiSolutionCalculator;
@@ -202,7 +203,26 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 			sandaierSolution.forEach((solution) -> {
 				kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
 			});
-		} else if (beiYaDianShuZu instanceof SidaierDianShuZu) {// 四带二
+		} else if (beiYaDianShuZu instanceof SidaiyiDianShuZu) {// 四带二单张
+			SidaiyiDianShuZu beiYaSidaiyiDianShuZu = (SidaiyiDianShuZu) beiYaDianShuZu;
+			List<SidaiyiDianShuZu> sidaiyiList = DoudizhuSolutionGenerator
+					.generateAllSidaiyiDianShuZu(dianShuAmountArray);
+			List<SidaiyiDianShuZu> sidaiyiFilterList = new ArrayList<>();
+			for (SidaiyiDianShuZu sidaiyiDianShuZu : sidaiyiList) {
+				try {
+					if (chibangDianShuZuComparator.compare(sidaiyiDianShuZu, beiYaSidaiyiDianShuZu) > 0) {
+						sidaiyiFilterList.add(sidaiyiDianShuZu);
+					}
+				} catch (CanNotCompareException e) {
+					e.printStackTrace();
+				}
+			}
+			List<DaPaiDianShuSolution> sidaiyiSolution = DoudizhuSolutionGenerator
+					.calculateSidaiyiDaPaiDianShuSolution(sidaiyiFilterList);
+			sidaiyiSolution.forEach((solution) -> {
+				kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
+			});
+		} else if (beiYaDianShuZu instanceof SidaierDianShuZu) {// 四带二对子
 			SidaierDianShuZu beiYaSidaierDianShuZu = (SidaierDianShuZu) beiYaDianShuZu;
 			List<SidaierDianShuZu> sidaierList = DoudizhuSolutionGenerator
 					.generateAllSidaierDianShuZu(dianShuAmountArray);

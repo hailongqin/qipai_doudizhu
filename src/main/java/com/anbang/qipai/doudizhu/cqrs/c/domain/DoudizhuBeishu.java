@@ -21,14 +21,26 @@ public class DoudizhuBeishu {
 
 	public void calculate() {
 		int beishu = 1;
-		if (qiangdizhuCount == 1) {
-			beishu = beishu << 1;
-		} else if (qiangdizhuCount == 2) {
-			beishu = beishu << 2;
-		} else if (qiangdizhuCount == 3) {
-			beishu *= 5;
-		} else if (qiangdizhuCount == 4) {
-			beishu *= 6;
+		if (renshu == 2) {
+			if (qiangdizhuCount == 2) {
+				beishu = beishu << 1;
+			} else if (qiangdizhuCount == 3) {
+				beishu = beishu << 2;
+			} else if (qiangdizhuCount == 4) {
+				beishu *= 5;
+			} else if (qiangdizhuCount == 5) {
+				beishu *= 6;
+			}
+		} else {
+			if (qiangdizhuCount == 1) {
+				beishu = beishu << 1;
+			} else if (qiangdizhuCount == 2) {
+				beishu = beishu << 2;
+			} else if (qiangdizhuCount == 3) {
+				beishu *= 5;
+			} else if (qiangdizhuCount == 4) {
+				beishu *= 6;
+			}
 		}
 		if (dipaiHasDuiA) {
 			beishu = beishu << 1;
