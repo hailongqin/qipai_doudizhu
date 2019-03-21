@@ -192,7 +192,7 @@ public class GamePlayWsNotifier {
 	}
 
 	public boolean hasSessionForPlayer(String playerId) {
-		return playerIdSessionIdMap.get(playerId) != null;
+		return playerIdSessionIdMap.containsKey(playerId);
 	}
 
 	/**

@@ -77,6 +77,14 @@ public class DoudizhuBeishu {
 		value = beishu;
 	}
 
+	public boolean hasDanwang() {
+		return dipaihasDawang || (renshu == 2 && dipaihasXiaowang);
+	}
+
+	public boolean hasShuangwang() {
+		return dipaihasDawang && dipaihasXiaowang;
+	}
+
 	public int getRenshu() {
 		return renshu;
 	}
