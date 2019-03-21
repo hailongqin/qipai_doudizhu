@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.anbang.qipai.doudizhu.cqrs.q.dao.WatchRecordDao;
-import com.dml.mpgame.game.watch.WatchRecord;
-import com.dml.mpgame.game.watch.Watcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +13,15 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.result.DoudizhuJuResult;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.GameFinishVoteDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.JuResultDboDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dao.PukeGameDboDao;
+import com.anbang.qipai.doudizhu.cqrs.q.dao.WatchRecordDao;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameFinishVoteDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
 import com.anbang.qipai.doudizhu.plan.bean.PlayerInfo;
 import com.anbang.qipai.doudizhu.plan.dao.PlayerInfoDao;
 import com.dml.mpgame.game.extend.vote.GameFinishVoteValueObject;
+import com.dml.mpgame.game.watch.WatchRecord;
+import com.dml.mpgame.game.watch.Watcher;
 
 @Service
 public class PukeGameQueryService {
@@ -84,13 +84,29 @@ public class PukeGameQueryService {
 		}
 	}
 
+	public void finishGameImmediately(PukeGameValueObject pukeGameValueObject) {
+		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
+		pukeGameValueObject.allPlayerIds()
+				.forEach((playerId) -> playerInfoMap.put(playerId, playerInfoDao.findById(playerId)));
+		PukeGameDbo pukeGameDbo = new PukeGameDbo(pukeGameValueObject, playerInfoMap);
+		pukeGameDboDao.save(pukeGameDbo);
+
+		if (pukeGameValueObject.getJuResult() != null) {
+			DoudizhuJuResult doudizhuJuResult = (DoudizhuJuResult) pukeGameValueObject.getJuResult();
+			JuResultDbo juResultDbo = new JuResultDbo(pukeGameValueObject.getId(), null, doudizhuJuResult);
+			juResultDboDao.save(juResultDbo);
+		}
+	}
+
 	public void finish(PukeGameValueObject pukeGameValueObject) {
-		gameFinishVoteDboDao.removeGameFinishVoteDboByGameId(pukeGameValueObject.getId());
 		GameFinishVoteValueObject gameFinishVoteValueObject = pukeGameValueObject.getVote();
-		GameFinishVoteDbo gameFinishVoteDbo = new GameFinishVoteDbo();
-		gameFinishVoteDbo.setVote(gameFinishVoteValueObject);
-		gameFinishVoteDbo.setGameId(pukeGameValueObject.getId());
-		gameFinishVoteDboDao.save(gameFinishVoteDbo);
+		if (gameFinishVoteValueObject != null) {
+			gameFinishVoteDboDao.removeGameFinishVoteDboByGameId(pukeGameValueObject.getId());
+			GameFinishVoteDbo gameFinishVoteDbo = new GameFinishVoteDbo();
+			gameFinishVoteDbo.setVote(gameFinishVoteValueObject);
+			gameFinishVoteDbo.setGameId(pukeGameValueObject.getId());
+			gameFinishVoteDboDao.save(gameFinishVoteDbo);
+		}
 
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGameValueObject.allPlayerIds()
@@ -107,7 +123,9 @@ public class PukeGameQueryService {
 
 	public void voteToFinish(PukeGameValueObject pukeGameValueObject) {
 		GameFinishVoteValueObject gameFinishVoteValueObject = pukeGameValueObject.getVote();
-		gameFinishVoteDboDao.update(pukeGameValueObject.getId(), gameFinishVoteValueObject);
+		if (gameFinishVoteValueObject != null) {
+			gameFinishVoteDboDao.update(pukeGameValueObject.getId(), gameFinishVoteValueObject);
+		}
 
 		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
 		pukeGameValueObject.allPlayerIds()

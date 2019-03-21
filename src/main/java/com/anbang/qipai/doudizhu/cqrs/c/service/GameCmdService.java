@@ -1,10 +1,9 @@
 package com.anbang.qipai.doudizhu.cqrs.c.service;
 
+import java.util.Map;
+
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyForGameResult;
-import com.dml.mpgame.game.GameValueObject;
-
-import java.util.Map;
 
 public interface GameCmdService {
 
@@ -34,15 +33,15 @@ public interface GameCmdService {
 
 	PukeGameValueObject voteToFinishByTimeOver(String playerId, Long currentTime) throws Exception;
 
-	GameValueObject finishGameImmediately(String gameId) throws Exception;
+	PukeGameValueObject finishGameImmediately(String gameId) throws Exception;
 
 	void bindPlayer(String playerId, String gameId);
 
-	PukeGameValueObject joinWatch (String playerId, String nickName, String headimgurl, String gameId) throws Exception;
+	PukeGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId) throws Exception;
 
-	PukeGameValueObject leaveWatch (String playerId, String gameId) throws Exception;
+	PukeGameValueObject leaveWatch(String playerId, String gameId) throws Exception;
 
-	Map getwatch (String gameId);
+	Map getwatch(String gameId);
 
 	void recycleWatch(String gameId);
 }
