@@ -224,11 +224,12 @@ public class DoudizhuSolutionGenerator {
 		if (chibangList.size() < length) {
 			for (int i = start; i < dianShuAmountArray.length; i++) {
 				if (dianShuAmountArray[i] > 0) {
-					chibangList.add(DianShu.getDianShuByOrdinal(i));
+					List<DianShu> newChibangList = new ArrayList<>(chibangList);
+					newChibangList.add(DianShu.getDianShuByOrdinal(i));
 					int[] amountArray = dianShuAmountArray.clone();
 					amountArray[i] = 0;
-					generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, new ArrayList<>(chibangList),
-							amountArray, i, count + 1, length);
+					generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, newChibangList, amountArray,
+							i, count + 1, length);
 				}
 			}
 		} else {
@@ -539,8 +540,8 @@ public class DoudizhuSolutionGenerator {
 			dachuDianShuList.add(sidaierDianShuZu.getDianshu());
 
 			dachuDianShuList.add(sidaierDianShuZu.getChibang());
-			dachuDianShuList.add(sidaierDianShuZu.getChibanger());
 			dachuDianShuList.add(sidaierDianShuZu.getChibang());
+			dachuDianShuList.add(sidaierDianShuZu.getChibanger());
 			dachuDianShuList.add(sidaierDianShuZu.getChibanger());
 			DianShu[] dachuDianShuArray = new DianShu[dachuDianShuList.size()];
 			dachuDianShuList.toArray(dachuDianShuArray);

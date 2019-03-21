@@ -23,6 +23,7 @@ public class DoudizhuPlayerValueObjectVO {
 	private boolean watingForMe = false;
 	private PlayerQiangdizhuState state;
 	private boolean noPaiWarning;// 结束警报
+	private int rangPai;
 
 	public DoudizhuPlayerValueObjectVO() {
 
@@ -180,6 +181,14 @@ public class DoudizhuPlayerValueObjectVO {
 
 	public void setNoPaiWarning(boolean noPaiWarning) {
 		this.noPaiWarning = noPaiWarning;
+	}
+
+	public int getRangPai() {
+		return rangPai;
+	}
+
+	public void setRangPai(int rangPai) {
+		this.rangPai = rangPai;
 	}
 
 }

@@ -21,7 +21,6 @@ public class PanValueObjectVO {
 	private String latestDapaiPlayerId;
 	private DoudizhuBeishuVO beishu;
 	private List<PukePai> dipaiList;
-	private int rangPai;
 
 	public PanValueObjectVO() {
 	}
@@ -54,9 +53,9 @@ public class PanValueObjectVO {
 					if (rangPai > 4) {
 						rangPai = 4;
 					}
-					this.rangPai = rangPai;
+					doudizhuPlayer.setRangPai(rangPai);
 				}
-				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + rangPai) {
+				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + doudizhuPlayer.getRangPai()) {
 					doudizhuPlayer.setNoPaiWarning(true);
 				}
 			}
@@ -154,14 +153,6 @@ public class PanValueObjectVO {
 
 	public void setDipaiList(List<PukePai> dipaiList) {
 		this.dipaiList = dipaiList;
-	}
-
-	public int getRangPai() {
-		return rangPai;
-	}
-
-	public void setRangPai(int rangPai) {
-		this.rangPai = rangPai;
 	}
 
 }
