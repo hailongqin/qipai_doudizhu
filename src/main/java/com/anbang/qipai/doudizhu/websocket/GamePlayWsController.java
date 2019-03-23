@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.dml.mpgame.game.watch.Watcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -178,14 +179,28 @@ public class GamePlayWsController extends TextWebSocketHandler {
 			return;
 		}
 
+		//查询观战信息
+		Map<String, Watcher> watcherMap = gameCmdService.getwatch(gameId);
+		if (!CollectionUtils.isEmpty(watcherMap) && watcherMap.containsKey(playerId)) {
+			List<String> playerIds = new ArrayList<>();
+			playerIds.add(playerId);
+			wsNotifier.notifyToWatchQuery(playerIds,"bindPlayer");
+			return;
+		}
+
 		// 给用户安排query scope
 		PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
 		if (pukeGameDbo != null) {
 
 			GameState gameState = pukeGameDbo.getState();
 
+<<<<<<< HEAD
 			// 观战结束
 			if (pukeGameQueryService.findByPlayerId(gameId, playerId) && gameState.name().equals(Finished.name)) {
+=======
+			//观战结束
+			if (pukeGameQueryService.findByPlayerId(gameId,playerId) &&  gameState.name().equals(Finished.name)) {
+>>>>>>> branch 'master' of https://github.com/hangzhouanbang/qipai_doudizhu.git
 				List<String> playerIds = new ArrayList<>();
 				playerIds.add(playerId);
 				wsNotifier.notifyToWatchQuery(playerIds, WatchQueryScope.watchEnd.name());
