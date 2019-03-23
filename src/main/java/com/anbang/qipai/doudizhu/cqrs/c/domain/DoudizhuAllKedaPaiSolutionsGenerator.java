@@ -32,6 +32,9 @@ import com.dml.puke.wanfa.dianshu.dianshuzu.ShunziDianShuZu;
  */
 public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutionsGenerator {
 
+	/*
+	 * 有顺序的打牌方案，如4444，可以算3个4带1个4，也可以算炸弹，优先算炸弹
+	 */
 	@Override
 	public Map<String, DaPaiDianShuSolution> generateAllKedaPaiSolutions(Map<Integer, PukePai> allShoupai) {
 		Map<String, DaPaiDianShuSolution> kedaPaiSolutions = new HashMap<>();
@@ -106,20 +109,6 @@ public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutions
 		sandaierSolution.forEach((solution) -> {
 			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
 		});
-		// 四带二单张
-		List<SidaiyiDianShuZu> sidaiyiList = DoudizhuSolutionGenerator.generateAllSidaiyiDianShuZu(dianShuAmountArray);
-		List<DaPaiDianShuSolution> sidaiyiSolution = DoudizhuSolutionGenerator
-				.calculateSidaiyiDaPaiDianShuSolution(sidaiyiList);
-		sidaiyiSolution.forEach((solution) -> {
-			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
-		});
-		// 四带二对子
-		List<SidaierDianShuZu> sidaierList = DoudizhuSolutionGenerator.generateAllSidaierDianShuZu(dianShuAmountArray);
-		List<DaPaiDianShuSolution> sidaierSolution = DoudizhuSolutionGenerator
-				.calculateSidaierDaPaiDianShuSolution(sidaierList);
-		sidaierSolution.forEach((solution) -> {
-			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
-		});
 		// 带单张飞机
 		List<FeijidaiyiDianShuZu> feijidaiyiList = new ArrayList<>();
 		for (int length = 2; length < 12; length++) {// 连三张:二或更多的连续三张,不包括2与双王
@@ -138,6 +127,20 @@ public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutions
 		List<DaPaiDianShuSolution> feijidaierSolution = DoudizhuSolutionGenerator
 				.calculateFeijidaierDaPaiDianShuSolution(feijidaierList);
 		feijidaierSolution.forEach((solution) -> {
+			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
+		});
+		// 四带二单张
+		List<SidaiyiDianShuZu> sidaiyiList = DoudizhuSolutionGenerator.generateAllSidaiyiDianShuZu(dianShuAmountArray);
+		List<DaPaiDianShuSolution> sidaiyiSolution = DoudizhuSolutionGenerator
+				.calculateSidaiyiDaPaiDianShuSolution(sidaiyiList);
+		sidaiyiSolution.forEach((solution) -> {
+			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
+		});
+		// 四带二对子
+		List<SidaierDianShuZu> sidaierList = DoudizhuSolutionGenerator.generateAllSidaierDianShuZu(dianShuAmountArray);
+		List<DaPaiDianShuSolution> sidaierSolution = DoudizhuSolutionGenerator
+				.calculateSidaierDaPaiDianShuSolution(sidaierList);
+		sidaierSolution.forEach((solution) -> {
 			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
 		});
 		// 单个炸弹点数组

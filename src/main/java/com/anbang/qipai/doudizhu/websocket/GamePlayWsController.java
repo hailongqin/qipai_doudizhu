@@ -1,6 +1,7 @@
 package com.anbang.qipai.doudizhu.websocket;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -8,6 +9,7 @@ import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -28,6 +30,7 @@ import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.GameState;
 import com.dml.mpgame.game.extend.vote.FinishedByVote;
 import com.dml.mpgame.game.player.GamePlayerState;
+import com.dml.mpgame.game.watch.Watcher;
 import com.google.gson.Gson;
 
 @Component
@@ -159,13 +162,36 @@ public class GamePlayWsController extends TextWebSocketHandler {
 			return;
 		}
 		wsNotifier.bindPlayer(session.getId(), playerId);
-		gameCmdService.bindPlayer(playerId, gameId);
+		try {
+			gameCmdService.bindPlayer(playerId, gameId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// 查询观战信息
+		Map<String, Watcher> watcherMap = gameCmdService.getwatch(gameId);
+		if (!CollectionUtils.isEmpty(watcherMap) && watcherMap.containsKey(playerId)) {
+			List<String> playerIds = new ArrayList<>();
+			playerIds.add(playerId);
+			wsNotifier.notifyToWatchQuery(playerIds, "bindPlayer");
+			return;
+		}
 
 		// 给用户安排query scope
 		PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
 		if (pukeGameDbo != null) {
 
 			GameState gameState = pukeGameDbo.getState();
+
+			// 观战结束
+			if (pukeGameQueryService.findByPlayerId(gameId, playerId) && gameState.name().equals(Finished.name)) {
+				List<String> playerIds = new ArrayList<>();
+				playerIds.add(playerId);
+				wsNotifier.notifyToWatchQuery(playerIds, WatchQueryScope.watchEnd.name());
+				return;
+			}
+
 			GamePlayerState playerState = pukeGameDbo.findPlayer(playerId).getState();
 
 			List<QueryScope> scopes = QueryScope.scopesForState(gameState, playerState);

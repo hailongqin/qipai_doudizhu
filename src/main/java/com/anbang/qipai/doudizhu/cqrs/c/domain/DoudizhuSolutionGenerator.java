@@ -227,7 +227,7 @@ public class DoudizhuSolutionGenerator {
 					List<DianShu> newChibangList = new ArrayList<>(chibangList);
 					newChibangList.add(DianShu.getDianShuByOrdinal(i));
 					int[] amountArray = dianShuAmountArray.clone();
-					amountArray[i] = 0;
+					amountArray[i] -= 1;
 					generateFeijidaiyiDianShuZuChibang(feijidaiyiList, lianXuDianShuArray, newChibangList, amountArray,
 							i, count + 1, length);
 				}
@@ -299,11 +299,12 @@ public class DoudizhuSolutionGenerator {
 		if (chibangList.size() < length) {
 			for (int i = start; i < dianShuAmountArray.length; i++) {
 				if (dianShuAmountArray[i] > 1) {
-					chibangList.add(DianShu.getDianShuByOrdinal(i));
+					List<DianShu> newChibangList = new ArrayList<>(chibangList);
+					newChibangList.add(DianShu.getDianShuByOrdinal(i));
 					int[] amountArray = dianShuAmountArray.clone();
-					amountArray[i] = 0;
-					generateFeijidaierDianShuZuChibang(feijidaierList, lianXuDianShuArray, new ArrayList<>(chibangList),
-							amountArray, i, count + 1, length);
+					amountArray[i] -= 2;
+					generateFeijidaierDianShuZuChibang(feijidaierList, lianXuDianShuArray, newChibangList, amountArray,
+							i, count + 1, length);
 				}
 			}
 		} else {
@@ -350,7 +351,7 @@ public class DoudizhuSolutionGenerator {
 			int dianshuCount = dianShuAmountArray[i];
 			if (dianshuCount >= 3) {
 				int[] amountArray = dianShuAmountArray.clone();
-				amountArray[i] = 0;
+				amountArray[i] -= 3;
 				for (int j = 0; j < amountArray.length; j++) {
 					if (amountArray[j] > 0) {
 						DianShu dianshu = DianShu.getDianShuByOrdinal(i);
@@ -398,7 +399,7 @@ public class DoudizhuSolutionGenerator {
 			int dianshuCount = dianShuAmountArray[i];
 			if (dianshuCount >= 3) {
 				int[] amountArray = dianShuAmountArray.clone();
-				amountArray[i] = 0;
+				amountArray[i] -= 3;
 				for (int j = 0; j < amountArray.length; j++) {
 					if (amountArray[j] > 1) {
 						DianShu dianshu = DianShu.getDianShuByOrdinal(i);
@@ -447,7 +448,7 @@ public class DoudizhuSolutionGenerator {
 			int dianshuCount = dianShuAmountArray[i];
 			if (dianshuCount >= 4) {
 				int[] amountArray = dianShuAmountArray.clone();
-				amountArray[i] = 0;
+				amountArray[i] -= 4;
 				for (int j = 0; j < amountArray.length; j++) {
 					if (amountArray[j] > 0) {
 						int[] amountArray1 = amountArray.clone();
@@ -503,7 +504,7 @@ public class DoudizhuSolutionGenerator {
 			int dianshuCount = dianShuAmountArray[i];
 			if (dianshuCount >= 4) {
 				int[] amountArray = dianShuAmountArray.clone();
-				amountArray[i] = 0;
+				amountArray[i] -= 4;
 				for (int j = 0; j < amountArray.length; j++) {
 					if (amountArray[j] > 1) {
 						int[] amountArray1 = amountArray.clone();

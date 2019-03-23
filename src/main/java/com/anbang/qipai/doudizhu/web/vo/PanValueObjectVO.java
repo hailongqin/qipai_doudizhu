@@ -39,32 +39,34 @@ public class PanValueObjectVO {
 
 	public PanValueObjectVO(PanValueObject panValueObject, GameLatestInfoDbo gameLatestInfoDbo) {
 		no = panValueObject.getNo();
+		dizhuPlayerId = panValueObject.getDizhuPlayerId();
 		doudizhuPlayerList = new ArrayList<>();
 		panValueObject.getDoudizhuPlayerList().forEach((doudizhuPlayer) -> doudizhuPlayerList
 				.add(new DoudizhuPlayerValueObjectVO(doudizhuPlayer, gameLatestInfoDbo.getPlayerQiangdizhuInfos())));
-		doudizhuPlayerList.forEach((doudizhuPlayer) -> {
-			if (doudizhuPlayer.getId().equals(dizhuPlayerId)) {
-				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4) {
-					doudizhuPlayer.setNoPaiWarning(true);
-				}
-			} else {
-				if (doudizhuPlayerList.size() == 2 && gameLatestInfoDbo.getPanNo() == no) {
-					int rangPai = gameLatestInfoDbo.getQiangdizhuCount() - 1;
-					if (rangPai > 4) {
-						rangPai = 4;
+		if (dizhuPlayerId != null) {
+			doudizhuPlayerList.forEach((doudizhuPlayer) -> {
+				if (doudizhuPlayer.getId().equals(dizhuPlayerId)) {
+					if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4) {
+						doudizhuPlayer.setNoPaiWarning(true);
 					}
-					doudizhuPlayer.setRangPai(rangPai);
+				} else {
+					if (doudizhuPlayerList.size() == 2 && gameLatestInfoDbo.getPanNo() == no) {
+						int rangPai = gameLatestInfoDbo.getQiangdizhuCount() - 1;
+						if (rangPai > 4) {
+							rangPai = 4;
+						}
+						doudizhuPlayer.setRangPai(rangPai);
+					}
+					if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + doudizhuPlayer.getRangPai()) {
+						doudizhuPlayer.setNoPaiWarning(true);
+					}
 				}
-				if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + doudizhuPlayer.getRangPai()) {
-					doudizhuPlayer.setNoPaiWarning(true);
-				}
-			}
-		});
+			});
+		}
 		paiListValueObject = panValueObject.getPaiListValueObject();
 		dachuPaiZuList = panValueObject.getDachuPaiZuList();
 		actionPosition = panValueObject.getActionPosition();
 		latestDapaiPlayerId = panValueObject.getLatestDapaiPlayerId();
-		dizhuPlayerId = panValueObject.getDizhuPlayerId();
 		beishu = new DoudizhuBeishuVO(gameLatestInfoDbo.getBeishu());
 		dipaiList = gameLatestInfoDbo.getDipaiList();
 	}

@@ -35,7 +35,7 @@ public interface GameCmdService {
 
 	PukeGameValueObject finishGameImmediately(String gameId) throws Exception;
 
-	void bindPlayer(String playerId, String gameId);
+	void bindPlayer(String playerId, String gameId) throws Exception;
 
 	PukeGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId) throws Exception;
 
