@@ -47,29 +47,29 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			// 4-1
 			leftChildren.getLeftChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang, null);
 			// 5-1
-			leftChildren.getLeftChildren().getLeftChildren().getLeftChildren()
-					.createLeftChildren(PlayerQiangdizhuState.qiang, currentPan.playerIdForPosition(Position.dong));
+			leftChildren.getLeftChildren().getLeftChildren().getLeftChildren().createLeftChildren(
+					PlayerQiangdizhuState.afterqiang, currentPan.playerIdForPosition(Position.dong));
 			// 5-2
-			leftChildren.getLeftChildren().getLeftChildren().getLeftChildren()
-					.createRightChildren(PlayerQiangdizhuState.qiang, currentPan.playerIdForPosition(Position.xi));
+			leftChildren.getLeftChildren().getLeftChildren().getLeftChildren().createRightChildren(
+					PlayerQiangdizhuState.afterbuqiang, currentPan.playerIdForPosition(Position.xi));
 			// 4-2
-			leftChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 3-2
-			leftChildren.getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 2-2
-			leftChildren.createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.dong));
 
 			// 1-2
 			root.createRightChildren(PlayerQiangdizhuState.bujiao, null);
 			rightChildren = root.getRightChildren();
 			// 2-3
-			rightChildren.createLeftChildren(PlayerQiangdizhuState.jiaodizhu,
+			rightChildren.createLeftChildren(PlayerQiangdizhuState.afterjiaodizhu,
 					currentPan.playerIdForPosition(Position.xi));
 			// 2-4
-			rightChildren.createRightChildren(PlayerQiangdizhuState.bujiao,
+			rightChildren.createRightChildren(PlayerQiangdizhuState.afterbujiao,
 					currentPan.playerIdForPosition(Position.dong));
 		} else if (renshu == 3) {
 			// 1-1
@@ -80,31 +80,31 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			// 3-1
 			leftChildren.getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang, null);
 			// 4-1
-			leftChildren.getLeftChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			leftChildren.getLeftChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-2
-			leftChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 3-2
 			leftChildren.getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang, null);
 			// 4-3
-			leftChildren.getLeftChildren().getRightChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			leftChildren.getLeftChildren().getRightChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-4
-			leftChildren.getLeftChildren().getRightChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getLeftChildren().getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.nan));
 			// 2-2
 			leftChildren.createRightChildren(PlayerQiangdizhuState.buqiang, null);
 			// 3-3
 			leftChildren.getRightChildren().createLeftChildren(PlayerQiangdizhuState.qiang, null);
 			// 4-5
-			leftChildren.getRightChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			leftChildren.getRightChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-6
-			leftChildren.getRightChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getRightChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 3-4
-			leftChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			leftChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.dong));
 
 			// 1-2
@@ -115,31 +115,31 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			// 3-5
 			rightChildren.getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang, null);
 			// 4-9
-			rightChildren.getLeftChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			rightChildren.getLeftChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-10
-			rightChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			rightChildren.getLeftChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 3-6
 			rightChildren.getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang, null);
 			// 4-11
-			rightChildren.getLeftChildren().getRightChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			rightChildren.getLeftChildren().getRightChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-12
-			rightChildren.getLeftChildren().getRightChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			rightChildren.getLeftChildren().getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.nan));
 			// 2-4
 			rightChildren.createRightChildren(PlayerQiangdizhuState.bujiao, null);
 			// 3-7
 			rightChildren.getRightChildren().createLeftChildren(PlayerQiangdizhuState.jiaodizhu, null);
 			// 4-13
-			rightChildren.getRightChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.qiang,
+			rightChildren.getRightChildren().getLeftChildren().createLeftChildren(PlayerQiangdizhuState.afterqiang,
 					currentPan.playerIdForPosition(Position.dong));
 			// 4-14
-			rightChildren.getRightChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			rightChildren.getRightChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 3-8
-			rightChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.buqiang,
+			rightChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.dong));
 		} else {
 
@@ -200,11 +200,6 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 						playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForQiangdizhu);
 					}
 				}
-			}
-		}
-		if (node.getDizhuId() != null) {
-			for (String pid : currentPan.sortedPlayerIdList()) {
-				playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.afterQiangdizhu);
 			}
 		}
 		return node.getDizhuId();

@@ -65,7 +65,7 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 		Map<String, Integer> playerZhadanCountMap = zhadanDaActionStatisticsListener.getPlayerZhadanCountMap();
 		List<DoudizhuPanPlayerResult> panPlayerResultList = new ArrayList<>();
 		if (dizhuying) {// 地主赢
-			for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
+			for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdPlayerMap().values()) {
 				DoudizhuPanPlayerResult playerResult = new DoudizhuPanPlayerResult();
 				if (dizhu.equals(player.getId())) {
 					playerResult.setPlayerId(player.getId());
@@ -93,7 +93,7 @@ public class DoudizhuCurrentPanResultBuilder implements CurrentPanResultBuilder 
 				panPlayerResultList.add(playerResult);
 			}
 		} else {// 农民赢
-			for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
+			for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdPlayerMap().values()) {
 				DoudizhuPanPlayerResult playerResult = new DoudizhuPanPlayerResult();
 				if (dizhu.equals(player.getId())) {
 					playerResult.setPlayerId(player.getId());

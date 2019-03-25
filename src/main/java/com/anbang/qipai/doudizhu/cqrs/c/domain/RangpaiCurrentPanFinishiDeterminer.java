@@ -20,15 +20,15 @@ public class RangpaiCurrentPanFinishiDeterminer implements CurrentPanFinishiDete
 		String dizhu = currentPan.getDizhuPlayerId();
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
 		int qiangdizhuCount = qiangdizhuDizhuDeterminer.getQiangdizhuCount();
-		for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdMajiangPlayerMap().values()) {
+		for (DoudizhuPlayer player : currentPan.getDoudizhuPlayerIdPlayerMap().values()) {
 			if (player.getId().equals(dizhu)) {
 				if (player.getAllShoupai().size() == 0) {
 					currentPan.setYingjiaPlayerId(player.getId());
 					return true;
 				}
 			} else {
-				if (currentPan.getDoudizhuPlayerIdMajiangPlayerMap().size() == 2) {
-					int rangpai = qiangdizhuCount - 1 > 4 ? 4 : qiangdizhuCount;
+				if (currentPan.getDoudizhuPlayerIdPlayerMap().size() == 2) {
+					int rangpai = qiangdizhuCount - 1 > 4 ? 4 : qiangdizhuCount - 1;
 					if (player.getAllShoupai().size() <= rangpai) {
 						currentPan.setYingjiaPlayerId(player.getId());
 						return true;

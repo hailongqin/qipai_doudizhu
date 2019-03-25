@@ -74,7 +74,7 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = feijidaierSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((FeijidaiyiDianShuZu) feijidaierSolutionList.get(i).getDianShuZu())
+							if (((FeijidaierDianShuZu) feijidaierSolutionList.get(i).getDianShuZu())
 									.getLianxuDianshuArray()[0]
 											.compareTo(feijidaierDianShuZu.getLianxuDianshuArray()[0]) > 0) {
 								feijidaierSolutionList.add(i, solution);
@@ -137,7 +137,7 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = sidaierSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((SidaiyiDianShuZu) sidaierSolutionList.get(i).getDianShuZu()).getDianshu()
+							if (((SidaierDianShuZu) sidaierSolutionList.get(i).getDianShuZu()).getDianshu()
 									.compareTo(sidaierDianShuZu.getDianshu()) > 0) {
 								sidaierSolutionList.add(i, solution);
 								break;

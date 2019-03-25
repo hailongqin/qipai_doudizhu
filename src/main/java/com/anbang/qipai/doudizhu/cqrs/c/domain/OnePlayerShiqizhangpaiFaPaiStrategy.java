@@ -25,7 +25,7 @@ public class OnePlayerShiqizhangpaiFaPaiStrategy implements FaPaiStrategy {
 	public void fapai(Ju ju) throws Exception {
 		Pan currentPan = ju.getCurrentPan();
 		List<PukePai> avaliablePaiList = currentPan.getAvaliablePaiList();
-		Map<String, DoudizhuPlayer> doudizhuPlayerIdMajiangPlayerMap = currentPan.getDoudizhuPlayerIdMajiangPlayerMap();
+		Map<String, DoudizhuPlayer> doudizhuPlayerIdMajiangPlayerMap = currentPan.getDoudizhuPlayerIdPlayerMap();
 		// 2人
 		if (renshu == 2) {
 			List<PukePai> filterAvaliablePaiList = new ArrayList<>();
