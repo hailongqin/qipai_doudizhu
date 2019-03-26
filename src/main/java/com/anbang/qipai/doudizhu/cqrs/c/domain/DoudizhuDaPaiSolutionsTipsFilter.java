@@ -74,11 +74,19 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = feijidaierSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((FeijidaierDianShuZu) feijidaierSolutionList.get(i).getDianShuZu())
+							int compare = ((FeijidaierDianShuZu) feijidaierSolutionList.get(i).getDianShuZu())
 									.getLianxuDianshuArray()[0]
-											.compareTo(feijidaierDianShuZu.getLianxuDianshuArray()[0]) > 0) {
+											.compareTo(feijidaierDianShuZu.getLianxuDianshuArray()[0]);
+							if (compare > 0) {
 								feijidaierSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((FeijidaierDianShuZu) feijidaierSolutionList.get(i).getDianShuZu())
+										.getChibangArray()[0].compareTo(feijidaierDianShuZu.getChibangArray()[0]) > 0) {
+									feijidaierSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								feijidaierSolutionList.add(solution);
@@ -112,11 +120,19 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = feijidaiyiSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((FeijidaiyiDianShuZu) feijidaiyiSolutionList.get(i).getDianShuZu())
+							int compare = ((FeijidaiyiDianShuZu) feijidaiyiSolutionList.get(i).getDianShuZu())
 									.getLianxuDianshuArray()[0]
-											.compareTo(feijidaiyiDianShuZu.getLianxuDianshuArray()[0]) > 0) {
+											.compareTo(feijidaiyiDianShuZu.getLianxuDianshuArray()[0]);
+							if (compare > 0) {
 								feijidaiyiSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((FeijidaiyiDianShuZu) feijidaiyiSolutionList.get(i).getDianShuZu())
+										.getChibangArray()[0].compareTo(feijidaiyiDianShuZu.getChibangArray()[0]) > 0) {
+									feijidaiyiSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								feijidaiyiSolutionList.add(solution);
@@ -137,10 +153,18 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = sidaierSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((SidaierDianShuZu) sidaierSolutionList.get(i).getDianShuZu()).getDianshu()
-									.compareTo(sidaierDianShuZu.getDianshu()) > 0) {
+							int compare = ((SidaierDianShuZu) sidaierSolutionList.get(i).getDianShuZu()).getDianshu()
+									.compareTo(sidaierDianShuZu.getDianshu());
+							if (compare > 0) {
 								sidaierSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((SidaierDianShuZu) sidaierSolutionList.get(i).getDianShuZu()).getChibang()
+										.compareTo(sidaierDianShuZu.getChibang()) > 0) {
+									sidaierSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								sidaierSolutionList.add(solution);
@@ -161,10 +185,18 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = sidaiyiSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((SidaiyiDianShuZu) sidaiyiSolutionList.get(i).getDianShuZu()).getDianshu()
-									.compareTo(sidaiyiDianShuZu.getDianshu()) > 0) {
+							int compare = ((SidaiyiDianShuZu) sidaiyiSolutionList.get(i).getDianShuZu()).getDianshu()
+									.compareTo(sidaiyiDianShuZu.getDianshu());
+							if (compare > 0) {
 								sidaiyiSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((SidaiyiDianShuZu) sidaiyiSolutionList.get(i).getDianShuZu()).getChibang()
+										.compareTo(sidaiyiDianShuZu.getChibang()) > 0) {
+									sidaiyiSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								sidaiyiSolutionList.add(solution);
@@ -185,10 +217,18 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = sandaierSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((SandaierDianShuZu) sandaierSolutionList.get(i).getDianShuZu()).getDianshu()
-									.compareTo(sandaierDianShuZu.getDianshu()) > 0) {
+							int compare = ((SandaierDianShuZu) sandaierSolutionList.get(i).getDianShuZu()).getDianshu()
+									.compareTo(sandaierDianShuZu.getDianshu());
+							if (compare > 0) {
 								sandaierSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((SandaierDianShuZu) sandaierSolutionList.get(i).getDianShuZu()).getChibang()
+										.compareTo(sandaierDianShuZu.getChibang()) > 0) {
+									sandaierSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								sandaierSolutionList.add(solution);
@@ -209,10 +249,18 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 						int length = sandaiyiSolutionList.size();
 						int i = 0;
 						while (i < length) {
-							if (((SandaiyiDianShuZu) sandaiyiSolutionList.get(i).getDianShuZu()).getDianshu()
-									.compareTo(sandaiyiDianShuZu.getDianshu()) > 0) {
+							int compare = ((SandaiyiDianShuZu) sandaiyiSolutionList.get(i).getDianShuZu()).getDianshu()
+									.compareTo(sandaiyiDianShuZu.getDianshu());
+							if (compare > 0) {
 								sandaiyiSolutionList.add(i, solution);
 								break;
+							}
+							if (compare == 0) {
+								if (((SandaiyiDianShuZu) sandaiyiSolutionList.get(i).getDianShuZu()).getChibang()
+										.compareTo(sandaiyiDianShuZu.getChibang()) > 0) {
+									sandaiyiSolutionList.add(i, solution);
+									break;
+								}
 							}
 							if (i == length - 1) {
 								sandaiyiSolutionList.add(solution);
@@ -274,9 +322,9 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 			if (dianshuZu instanceof DanzhangDianShuZu) {
 				DanzhangDianShuZu danzhangDianShuZu = (DanzhangDianShuZu) dianshuZu;
 				DianShu dianshu = danzhangDianShuZu.getDianShu();
-				if (dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang)
+				if ((dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang))
 						&& (dianshuCountArray[13] == 1 && dianshuCountArray[14] == 1)) {// 有火箭
-				} else if (dianshuCountArray[dianshu.ordinal()] == 1) {
+				} else {
 					if (danzhangSolutionList.isEmpty()) {
 						danzhangSolutionList.add(solution);
 					} else {
@@ -363,31 +411,21 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 			// 顺子
 			if (dianshuZu instanceof ShunziDianShuZu) {
 				ShunziDianShuZu shunziDianShuZu = (ShunziDianShuZu) dianshuZu;
-				DianShu[] lianXuDianShuArray = shunziDianShuZu.getLianXuDianShuArray();
-				boolean allSuccess = true;
-				for (DianShu dianshu : lianXuDianShuArray) {
-					if (dianshuCountArray[dianshu.ordinal()] != 1) {
-						allSuccess = false;
-						break;
-					}
-				}
-				if (allSuccess) {
-					if (shunziSolutionList.isEmpty()) {
-						shunziSolutionList.add(solution);
-					} else {
-						int length = shunziSolutionList.size();
-						int i = 0;
-						while (i < length) {
-							if (((ShunziDianShuZu) shunziSolutionList.get(i).getDianShuZu()).getLianXuDianShuArray()[0]
-									.compareTo(shunziDianShuZu.getLianXuDianShuArray()[0]) > 0) {
-								shunziSolutionList.add(i, solution);
-								break;
-							}
-							if (i == length - 1) {
-								shunziSolutionList.add(solution);
-							}
-							i++;
+				if (shunziSolutionList.isEmpty()) {
+					shunziSolutionList.add(solution);
+				} else {
+					int length = shunziSolutionList.size();
+					int i = 0;
+					while (i < length) {
+						if (((ShunziDianShuZu) shunziSolutionList.get(i).getDianShuZu()).getLianXuDianShuArray()[0]
+								.compareTo(shunziDianShuZu.getLianXuDianShuArray()[0]) > 0) {
+							shunziSolutionList.add(i, solution);
+							break;
 						}
+						if (i == length - 1) {
+							shunziSolutionList.add(solution);
+						}
+						i++;
 					}
 				}
 			}

@@ -24,5 +24,6 @@ public enum PlayerQiangdizhuState {
 
 	afterqiang, // 抢地主之后结束抢地主
 
-	afterbuqiang;// 不抢之后结束抢地主
+	afterbuqiang, // 不抢之后结束抢地主
+
 }

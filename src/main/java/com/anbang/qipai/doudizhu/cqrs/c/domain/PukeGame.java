@@ -55,6 +55,9 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	private Map<String, Integer> playerTotalScoreMap = new HashMap<>();
 
 	public QiangdizhuResult qiangdizhu(String playerId, boolean qiang, long currentTime) throws Exception {
+		if (state.name().equals(VoteNotPassWhenQiangdizhu.name)) {
+			state = new Qiangdizhu();
+		}
 		if (!state.name().equals(Qiangdizhu.name)) {
 			throw new CannotQiangdizhuException();
 		}
@@ -65,6 +68,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		Pan currentPan = ju.getCurrentPan();
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
 		String dizhu = qiangdizhuDizhuDeterminer.determineToDizhu(ju, playerId, qiang);
+		updatePlayerState(playerId, new PlayerAfterQiangdizhu());
 		DoudizhuBeishu beishu = new DoudizhuBeishu();
 		beishu.setRenshu(renshu);
 		beishu.setQiangdizhuCount(qiangdizhuDizhuDeterminer.getQiangdizhuCount());
@@ -192,7 +196,6 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		gameInfo.setBeishu(beishu);
 		gameInfo.setDipaiList(new ArrayList<>(sanzhangDipaiDeterminer.getDipaiList()));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
-		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
 		result.setPlayerQiangdizhuMap(playerQiangdizhuMap);
 		if (state.name().equals(VoteNotPassWhenPlaying.name)) {
 			state = new Playing();
@@ -240,7 +243,6 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		gameInfo.setBeishu(beishu);
 		gameInfo.setDipaiList(new ArrayList<>(sanzhangDipaiDeterminer.getDipaiList()));
 		Map<String, PlayerQiangdizhuState> playerQiangdizhuMap = new HashMap<>();
-		playerQiangdizhuMap.putAll(qiangdizhuDizhuDeterminer.getPlayerQiangdizhuMap());
 		result.setPlayerQiangdizhuMap(playerQiangdizhuMap);
 		if (state.name().equals(VoteNotPassWhenPlaying.name)) {
 			state = new Playing();
