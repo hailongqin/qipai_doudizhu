@@ -32,6 +32,7 @@ import com.dml.doudizhu.pan.PanActionFrame;
 import com.dml.doudizhu.preparedapai.avaliablepai.OneAvaliablePaiFiller;
 import com.dml.doudizhu.preparedapai.dipai.SanzhangDipaiDeterminer;
 import com.dml.doudizhu.preparedapai.lipai.DianshuOrPaishuShoupaiSortStrategy;
+import com.dml.doudizhu.preparedapai.luanpai.LastPanChuPaiOrdinalLuanpaiStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.RandomLuanPaiStrategy;
 import com.dml.doudizhu.preparedapai.position.MustHasDongMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
@@ -50,6 +51,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
+	private boolean szfbxp;// 三张发不洗牌
 	private int difen;// 底分
 	private Ju ju;
 	private Map<String, Integer> playerTotalScoreMap = new HashMap<>();
@@ -120,9 +122,14 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		}
 		ju.setJuFinishiDeterminer(new FixedPanNumbersJuFinishiDeterminer(panshu));
 		ju.setAvaliablePaiFiller(new OneAvaliablePaiFiller());
-		ju.setLuanPaiStrategy(new RandomLuanPaiStrategy(startTime));
-
-		OnePlayerShiqizhangpaiFaPaiStrategy onePlayerShiqizhangpaiFaPaiStrategy = new OnePlayerShiqizhangpaiFaPaiStrategy();
+		ju.setLuanPaiStrategyForFirstPan(new RandomLuanPaiStrategy(startTime));
+		if (szfbxp) {
+			ju.setLuanPaiStrategyForNextPan(new LastPanChuPaiOrdinalLuanpaiStrategy());
+		} else {
+			ju.setLuanPaiStrategyForNextPan(new RandomLuanPaiStrategy(startTime));
+		}
+		OnePlayerShiqizhangpaiFaPaiStrategy onePlayerShiqizhangpaiFaPaiStrategy = new OnePlayerShiqizhangpaiFaPaiStrategy(
+				renshu, qxp, szfbxp);
 		onePlayerShiqizhangpaiFaPaiStrategy.setRenshu(renshu);
 		onePlayerShiqizhangpaiFaPaiStrategy.setQxp(qxp);
 		ju.setFaPaiStrategy(onePlayerShiqizhangpaiFaPaiStrategy);
@@ -388,6 +395,14 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 
 	public void setDifen(int difen) {
 		this.difen = difen;
+	}
+
+	public boolean isSzfbxp() {
+		return szfbxp;
+	}
+
+	public void setSzfbxp(boolean szfbxp) {
+		this.szfbxp = szfbxp;
 	}
 
 }

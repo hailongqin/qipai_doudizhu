@@ -23,6 +23,7 @@ public class GameVO {
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
+	private boolean szfbxp;
 	private int difen;
 	private int panNo;
 	private List<PukeGamePlayerVO> playerList;
@@ -37,6 +38,7 @@ public class GameVO {
 		panshu = pukeGameDbo.getPanshu();
 		renshu = pukeGameDbo.getRenshu();
 		qxp = pukeGameDbo.isQxp();
+		szfbxp = pukeGameDbo.isSzfbxp();
 		difen = pukeGameDbo.getDifen();
 		playerList = new ArrayList<>();
 		pukeGameDbo.getPlayers().forEach((dbo) -> playerList.add(new PukeGamePlayerVO(dbo)));
@@ -134,6 +136,14 @@ public class GameVO {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public boolean isSzfbxp() {
+		return szfbxp;
+	}
+
+	public void setSzfbxp(boolean szfbxp) {
+		this.szfbxp = szfbxp;
 	}
 
 }

@@ -8,10 +8,10 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyForGameResult;
 public interface GameCmdService {
 
 	PukeGameValueObject newPukeGame(String gameId, String playerId, Integer panshu, Integer renshu, Boolean qxp,
-			Integer difen);
+			Boolean szfbxp, Integer difen);
 
 	PukeGameValueObject newPukeGameLeaveAndQuit(String gameId, String playerId, Integer panshu, Integer renshu,
-			Boolean qxp, Integer difen);
+			Boolean qxp, Boolean szfbxp, Integer difen);
 
 	PukeGameValueObject joinGame(String playerId, String gameId) throws Exception;
 

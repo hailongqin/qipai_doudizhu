@@ -36,7 +36,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 
 	@Override
 	public PukeGameValueObject newPukeGame(String gameId, String playerId, Integer panshu, Integer renshu, Boolean qxp,
-			Integer difen) {
+			Boolean szfbxp, Integer difen) {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 
 		PukeGame newGame = new PukeGame();
@@ -45,6 +45,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		newGame.setRenshu(renshu);
 		newGame.setFixedPlayerCount(renshu);
 		newGame.setQxp(qxp);
+		newGame.setSzfbxp(szfbxp);
 		newGame.setDifen(difen);
 
 		newGame.setVotePlayersFilter(new OnlineVotePlayersFilter());
@@ -70,7 +71,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 
 	@Override
 	public PukeGameValueObject newPukeGameLeaveAndQuit(String gameId, String playerId, Integer panshu, Integer renshu,
-			Boolean qxp, Integer difen) {
+			Boolean qxp, Boolean szfbxp, Integer difen) {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 
 		PukeGame newGame = new PukeGame();
@@ -79,6 +80,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		newGame.setRenshu(renshu);
 		newGame.setFixedPlayerCount(renshu);
 		newGame.setQxp(qxp);
+		newGame.setSzfbxp(szfbxp);
 		newGame.setDifen(difen);
 
 		newGame.setVotePlayersFilter(new OnlineVotePlayersFilter());

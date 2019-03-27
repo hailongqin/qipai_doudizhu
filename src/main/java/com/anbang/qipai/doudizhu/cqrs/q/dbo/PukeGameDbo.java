@@ -14,6 +14,7 @@ public class PukeGameDbo {
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
+	private boolean szfbxp;
 	private int difen;
 	private GameState state;// 原来是 waitingStart, playing, waitingNextPan, finished
 	private int panNo;
@@ -28,6 +29,7 @@ public class PukeGameDbo {
 		panshu = pukeGame.getPanshu();
 		renshu = pukeGame.getRenshu();
 		qxp = pukeGame.isQxp();
+		szfbxp = pukeGame.isSzfbxp();
 		difen = pukeGame.getDifen();
 		state = pukeGame.getState();
 		panNo = pukeGame.getPanNo();
@@ -121,6 +123,14 @@ public class PukeGameDbo {
 
 	public void setDifen(int difen) {
 		this.difen = difen;
+	}
+
+	public boolean isSzfbxp() {
+		return szfbxp;
+	}
+
+	public void setSzfbxp(boolean szfbxp) {
+		this.szfbxp = szfbxp;
 	}
 
 }

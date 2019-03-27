@@ -107,11 +107,11 @@ public class GameController {
 	 */
 	@RequestMapping(value = "/newgame")
 	@ResponseBody
-	public CommonVO newgame(String playerId, int panshu, int renshu, boolean qxp, int difen) {
+	public CommonVO newgame(String playerId, int panshu, int renshu, boolean qxp, boolean szfbxp, int difen) {
 		CommonVO vo = new CommonVO();
 		String newGameId = UUID.randomUUID().toString();
 		PukeGameValueObject pukeGameValueObject = gameCmdService.newPukeGame(newGameId, playerId, panshu, renshu, qxp,
-				difen);
+				szfbxp, difen);
 		pukeGameQueryService.newPukeGame(pukeGameValueObject);
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		Map data = new HashMap();
@@ -126,11 +126,12 @@ public class GameController {
 	 */
 	@RequestMapping(value = "/newgame_leave_quit")
 	@ResponseBody
-	public CommonVO newgame_leave_quit(String playerId, int panshu, int renshu, boolean qxp, int difen) {
+	public CommonVO newgame_leave_quit(String playerId, int panshu, int renshu, boolean qxp, boolean szfbxp,
+			int difen) {
 		CommonVO vo = new CommonVO();
 		String newGameId = UUID.randomUUID().toString();
 		PukeGameValueObject pukeGameValueObject = gameCmdService.newPukeGameLeaveAndQuit(newGameId, playerId, panshu,
-				renshu, qxp, difen);
+				renshu, qxp, szfbxp, difen);
 		pukeGameQueryService.newPukeGame(pukeGameValueObject);
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		Map data = new HashMap();

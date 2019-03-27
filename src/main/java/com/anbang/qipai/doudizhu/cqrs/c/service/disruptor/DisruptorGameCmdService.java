@@ -20,12 +20,13 @@ public class DisruptorGameCmdService extends DisruptorCmdServiceBase implements 
 
 	@Override
 	public PukeGameValueObject newPukeGame(String gameId, String playerId, Integer panshu, Integer renshu, Boolean qxp,
-			Integer difen) {
+			Boolean szfbxp, Integer difen) {
 		CommonCommand cmd = new CommonCommand(GameCmdServiceImpl.class.getName(), "newPukeGame", gameId, playerId,
-				panshu, renshu, qxp, difen);
+				panshu, renshu, qxp, szfbxp, difen);
 		DeferredResult<PukeGameValueObject> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
 			PukeGameValueObject pukeGameValueObject = gameCmdServiceImpl.newPukeGame(cmd.getParameter(),
-					cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter());
+					cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(),
+					cmd.getParameter());
 			return pukeGameValueObject;
 		});
 		try {
@@ -37,12 +38,13 @@ public class DisruptorGameCmdService extends DisruptorCmdServiceBase implements 
 
 	@Override
 	public PukeGameValueObject newPukeGameLeaveAndQuit(String gameId, String playerId, Integer panshu, Integer renshu,
-			Boolean qxp, Integer difen) {
+			Boolean qxp, Boolean szfbxp, Integer difen) {
 		CommonCommand cmd = new CommonCommand(GameCmdServiceImpl.class.getName(), "newPukeGameLeaveAndQuit", gameId,
-				playerId, panshu, renshu, qxp, difen);
+				playerId, panshu, renshu, qxp, szfbxp, difen);
 		DeferredResult<PukeGameValueObject> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
 			PukeGameValueObject pukeGameValueObject = gameCmdServiceImpl.newPukeGameLeaveAndQuit(cmd.getParameter(),
-					cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter());
+					cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(),
+					cmd.getParameter());
 			return pukeGameValueObject;
 		});
 		try {

@@ -11,6 +11,7 @@ public class PukeGameValueObject extends FixedPlayersMultipanAndVotetofinishGame
 	private int panshu;
 	private int renshu;
 	private boolean qxp;// 去小牌
+	private boolean szfbxp;
 	private int difen;
 	private Map<String, Integer> playerTotalScoreMap = new HashMap<>();
 	private JuResult juResult;
@@ -20,11 +21,20 @@ public class PukeGameValueObject extends FixedPlayersMultipanAndVotetofinishGame
 		panshu = pukeGame.getPanshu();
 		renshu = pukeGame.getRenshu();
 		qxp = pukeGame.isQxp();
+		szfbxp = pukeGame.isSzfbxp();
 		difen = pukeGame.getDifen();
 		playerTotalScoreMap.putAll(pukeGame.getPlayerTotalScoreMap());
 		if (pukeGame.getJu() != null) {
 			juResult = pukeGame.getJu().getJuResult();
 		}
+	}
+
+	public boolean isSzfbxp() {
+		return szfbxp;
+	}
+
+	public void setSzfbxp(boolean szfbxp) {
+		this.szfbxp = szfbxp;
 	}
 
 	public int getDifen() {
