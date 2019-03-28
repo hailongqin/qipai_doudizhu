@@ -109,6 +109,14 @@ public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutions
 		sandaierSolution.forEach((solution) -> {
 			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
 		});
+		// 特殊:三带对王
+		List<SandaierDianShuZu> sandaiduiwangList = DoudizhuSolutionGenerator
+				.generateAllSandaiduiwangDianShuZu(dianShuAmountArray);
+		List<DaPaiDianShuSolution> sandaiduiwangSolution = DoudizhuSolutionGenerator
+				.calculateSandaiduiwangDaPaiDianShuSolution(sandaiduiwangList);
+		sandaiduiwangSolution.forEach((solution) -> {
+			kedaPaiSolutions.put(solution.getDianshuZuheIdx(), solution);
+		});
 		// 带单张飞机
 		List<FeijidaiyiDianShuZu> feijidaiyiList = new ArrayList<>();
 		for (int length = 2; length < 12; length++) {// 连三张:二或更多的连续三张,不包括2与双王

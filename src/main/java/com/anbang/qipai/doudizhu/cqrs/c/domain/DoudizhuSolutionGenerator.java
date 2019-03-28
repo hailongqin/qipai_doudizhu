@@ -440,6 +440,53 @@ public class DoudizhuSolutionGenerator {
 	}
 
 	/**
+	 * 生成三带对王点数组
+	 */
+	public static List<SandaierDianShuZu> generateAllSandaiduiwangDianShuZu(int[] dianShuAmountArray) {
+		List<SandaierDianShuZu> sandaierList = new ArrayList<>();
+		for (int i = 0; i < dianShuAmountArray.length; i++) {
+			int dianshuCount = dianShuAmountArray[i];
+			if (dianshuCount >= 3) {
+				int[] amountArray = dianShuAmountArray.clone();
+				amountArray[i] -= 3;
+				if (amountArray[13] == 1 && amountArray[14] == 1) {
+					DianShu dianshu = DianShu.getDianShuByOrdinal(i);
+					DianShu chibang = DianShu.getDianShuByOrdinal(14);
+					SandaierDianShuZu sandaierDianShuZu = new SandaierDianShuZu(dianshu, chibang);
+					sandaierList.add(sandaierDianShuZu);
+				}
+			}
+		}
+		return sandaierList;
+	}
+
+	/**
+	 * 三带对王打牌方案
+	 */
+	public static List<DaPaiDianShuSolution> calculateSandaiduiwangDaPaiDianShuSolution(
+			List<SandaierDianShuZu> sandaierList) {
+		List<DaPaiDianShuSolution> solutionList = new ArrayList<>();
+		// 三带二
+		for (SandaierDianShuZu sandaierDianShuZu : sandaierList) {
+			DaPaiDianShuSolution solution = new DaPaiDianShuSolution();
+			solution.setDianShuZu(sandaierDianShuZu);
+			List<DianShu> dachuDianShuList = new ArrayList<>();
+			dachuDianShuList.add(sandaierDianShuZu.getDianshu());
+			dachuDianShuList.add(sandaierDianShuZu.getDianshu());
+			dachuDianShuList.add(sandaierDianShuZu.getDianshu());
+
+			dachuDianShuList.add(DianShu.xiaowang);
+			dachuDianShuList.add(DianShu.dawang);
+			DianShu[] dachuDianShuArray = new DianShu[dachuDianShuList.size()];
+			dachuDianShuList.toArray(dachuDianShuArray);
+			solution.setDachuDianShuArray(dachuDianShuArray);
+			solution.calculateDianshuZuheIdx();
+			solutionList.add(solution);
+		}
+		return solutionList;
+	}
+
+	/**
 	 * 生成四带二单张点数组
 	 */
 	public static List<SidaiyiDianShuZu> generateAllSidaiyiDianShuZu(int[] dianShuAmountArray) {

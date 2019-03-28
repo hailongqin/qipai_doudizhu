@@ -35,7 +35,7 @@ import com.dml.doudizhu.preparedapai.lipai.DianshuOrPaishuShoupaiSortStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.LastPanChuPaiOrdinalLuanpaiStrategy;
 import com.dml.doudizhu.preparedapai.luanpai.RandomLuanPaiStrategy;
 import com.dml.doudizhu.preparedapai.position.MustHasDongMenfengDeterminer;
-import com.dml.doudizhu.preparedapai.position.NoChangeMenfengDeterminer;
+import com.dml.doudizhu.preparedapai.position.YingjiaDongMenfengDeterminer;
 import com.dml.doudizhu.preparedapai.xianda.DizhuXiandaDeterminer;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Playing;
@@ -139,7 +139,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		ju.setDizhuDeterminer(qiangdizhuDizhuDeterminer);
 
 		ju.setMenfengDeterminerForFirstPan(new MustHasDongMenfengDeterminer());
-		ju.setMenfengDeterminerForNextPan(new NoChangeMenfengDeterminer());
+		ju.setMenfengDeterminerForNextPan(new YingjiaDongMenfengDeterminer());
 		ju.setXiandaDeterminer(new DizhuXiandaDeterminer());
 		ju.setShoupaiSortStrategy(new DianshuOrPaishuShoupaiSortStrategy());
 		ju.setWaihaoGenerator(new DoudizhuWaihaoGenerator());
@@ -276,7 +276,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 	protected void startNextPan() throws Exception {
 		ju.startNextPan();
 		QiangdizhuDizhuDeterminer qiangdizhuDizhuDeterminer = (QiangdizhuDizhuDeterminer) ju.getDizhuDeterminer();
-		qiangdizhuDizhuDeterminer.reset(ju);
+		qiangdizhuDizhuDeterminer.init(ju);
 		state = new Qiangdizhu();
 		updateAllPlayersState(new PlayerQiangdizhu());
 	}

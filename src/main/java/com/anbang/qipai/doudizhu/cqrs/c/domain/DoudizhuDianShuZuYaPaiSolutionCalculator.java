@@ -104,9 +104,9 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 		} else if (beiYaDianShuZu instanceof ShunziDianShuZu) {// 顺子
 			ShunziDianShuZu beiYaShunziDianShuZu = (ShunziDianShuZu) beiYaDianShuZu;
 			List<ShunziDianShuZu> shunziList = new ArrayList<>();
-			for (int length = 5; length < 12; length++) {// 顺子:五张或更多的连续单牌,不包括2与双王,如单5+单6+单7+单8+单9.
-				shunziList.addAll(DianShuZuGenerator.generateAllShunziDianShuZu(dianShuAmountArray, length));
-			}
+			// 顺子:五张或更多的连续单牌,不包括2与双王,如单5+单6+单7+单8+单9.
+			shunziList.addAll(
+					DianShuZuGenerator.generateAllShunziDianShuZu(dianShuAmountArray, beiYaShunziDianShuZu.length()));
 			List<ShunziDianShuZu> shunziFilterList = new ArrayList<>();
 			for (ShunziDianShuZu shunziDianShuZu : shunziList) {
 				try {
@@ -124,10 +124,9 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 			});
 		} else if (beiYaDianShuZu instanceof LianduiDianShuZu) {// 连对
 			LianduiDianShuZu beiYaLianduiDianShuZu = (LianduiDianShuZu) beiYaDianShuZu;
-			List<LianduiDianShuZu> lianduiList = new ArrayList<>();
-			for (int length = 3; length < 12; length++) {// 连对:三对或更多的连续对子,不包括2与双王,如对5+对6+对7.
-				lianduiList.addAll(DianShuZuGenerator.generateAllLianduiDianShuZu(dianShuAmountArray, length));
-			}
+			List<LianduiDianShuZu> lianduiList = new ArrayList<>();// 连对:三对或更多的连续对子,不包括2与双王,如对5+对6+对7.
+			lianduiList.addAll(
+					DianShuZuGenerator.generateAllLianduiDianShuZu(dianShuAmountArray, beiYaLianduiDianShuZu.length()));
 			List<LianduiDianShuZu> lianduiFilterList = new ArrayList<>();
 			for (LianduiDianShuZu lianduiDianShuZu : lianduiList) {
 				try {
@@ -145,11 +144,9 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 			});
 		} else if (beiYaDianShuZu instanceof LiansanzhangDianShuZu) {// 连三张
 			LiansanzhangDianShuZu beiYaLiansanzhangDianShuZu = (LiansanzhangDianShuZu) beiYaDianShuZu;
-			List<LiansanzhangDianShuZu> lianSanZhangList = new ArrayList<>();
-			for (int length = 2; length < 12; length++) {// 连三张:二或更多的连续三张,不包括2与双王
-				lianSanZhangList
-						.addAll(DianShuZuGenerator.generateAllLiansanzhangDianShuZu(dianShuAmountArray, length));
-			}
+			List<LiansanzhangDianShuZu> lianSanZhangList = new ArrayList<>();// 连三张:二或更多的连续三张,不包括2与双王
+			lianSanZhangList.addAll(DianShuZuGenerator.generateAllLiansanzhangDianShuZu(dianShuAmountArray,
+					beiYaLiansanzhangDianShuZu.length()));
 			List<LiansanzhangDianShuZu> lianSanZhangFilterList = new ArrayList<>();
 			for (LiansanzhangDianShuZu liansanzhangDianShuZu : lianSanZhangList) {
 				try {
@@ -244,10 +241,9 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 		} else if (beiYaDianShuZu instanceof FeijidaiyiDianShuZu) {// 飞机带单张
 			FeijidaiyiDianShuZu beiYaFeijidaiyiDianShuZu = (FeijidaiyiDianShuZu) beiYaDianShuZu;
 			List<FeijidaiyiDianShuZu> feijidaiyiList = new ArrayList<>();
-			for (int length = 2; length < 12; length++) {// 连三张:二或更多的连续三张,不包括2与双王
-				feijidaiyiList
-						.addAll(DoudizhuSolutionGenerator.generateAllFeijidaiyiDianShuZu(dianShuAmountArray, length));
-			}
+			// 连三张:二或更多的连续三张,不包括2与双王
+			feijidaiyiList.addAll(DoudizhuSolutionGenerator.generateAllFeijidaiyiDianShuZu(dianShuAmountArray,
+					beiYaFeijidaiyiDianShuZu.length()));
 			List<FeijidaiyiDianShuZu> feijidaiyiFilterList = new ArrayList<>();
 			for (FeijidaiyiDianShuZu feijidaiyiDianShuZu : feijidaiyiList) {
 				try {
@@ -266,10 +262,9 @@ public class DoudizhuDianShuZuYaPaiSolutionCalculator implements DianShuZuYaPaiS
 		} else if (beiYaDianShuZu instanceof FeijidaierDianShuZu) {// 飞机带对子
 			FeijidaierDianShuZu beiYaFeijidaierDianShuZu = (FeijidaierDianShuZu) beiYaDianShuZu;
 			List<FeijidaierDianShuZu> feijidaierList = new ArrayList<>();
-			for (int length = 2; length < 12; length++) {// 连三张:二或更多的连续三张,不包括2与双王
-				feijidaierList
-						.addAll(DoudizhuSolutionGenerator.generateAllFeijidaierDianShuZu(dianShuAmountArray, length));
-			}
+			// 连三张:二或更多的连续三张,不包括2与双王
+			feijidaierList.addAll(DoudizhuSolutionGenerator.generateAllFeijidaierDianShuZu(dianShuAmountArray,
+					beiYaFeijidaierDianShuZu.length()));
 			List<FeijidaierDianShuZu> feijidaierFilterList = new ArrayList<>();
 			for (FeijidaierDianShuZu feijidaierDianShuZu : feijidaierList) {
 				try {

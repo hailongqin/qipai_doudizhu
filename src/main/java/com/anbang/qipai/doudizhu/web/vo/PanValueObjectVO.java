@@ -21,6 +21,7 @@ public class PanValueObjectVO {
 	private String latestDapaiPlayerId;
 	private DoudizhuBeishuVO beishu;
 	private List<PukePai> dipaiList;
+	private int rangPai;
 
 	public PanValueObjectVO() {
 	}
@@ -43,6 +44,15 @@ public class PanValueObjectVO {
 		doudizhuPlayerList = new ArrayList<>();
 		panValueObject.getDoudizhuPlayerList().forEach((doudizhuPlayer) -> doudizhuPlayerList
 				.add(new DoudizhuPlayerValueObjectVO(doudizhuPlayer, gameLatestInfoDbo.getPlayerQiangdizhuInfos())));
+		if (doudizhuPlayerList.size() == 2 && gameLatestInfoDbo.getPanNo() == no) {
+			rangPai = gameLatestInfoDbo.getQiangdizhuCount() - 1;
+			if (rangPai > 4) {
+				rangPai = 4;
+			}
+			if (rangPai < 0) {
+				rangPai = 0;
+			}
+		}
 		if (dizhuPlayerId != null) {
 			doudizhuPlayerList.forEach((doudizhuPlayer) -> {
 				if (doudizhuPlayer.getId().equals(dizhuPlayerId)) {
@@ -50,13 +60,7 @@ public class PanValueObjectVO {
 						doudizhuPlayer.setNoPaiWarning(true);
 					}
 				} else {
-					if (doudizhuPlayerList.size() == 2 && gameLatestInfoDbo.getPanNo() == no) {
-						int rangPai = gameLatestInfoDbo.getQiangdizhuCount() - 1;
-						if (rangPai > 4) {
-							rangPai = 4;
-						}
-						doudizhuPlayer.setRangPai(rangPai);
-					}
+					doudizhuPlayer.setRangPai(rangPai);
 					if (doudizhuPlayer.getAllShoupai().getTotalShoupai() <= 4 + doudizhuPlayer.getRangPai()) {
 						doudizhuPlayer.setNoPaiWarning(true);
 					}
@@ -155,6 +159,14 @@ public class PanValueObjectVO {
 
 	public void setDipaiList(List<PukePai> dipaiList) {
 		this.dipaiList = dipaiList;
+	}
+
+	public int getRangPai() {
+		return rangPai;
+	}
+
+	public void setRangPai(int rangPai) {
+		this.rangPai = rangPai;
 	}
 
 }
