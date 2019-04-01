@@ -78,7 +78,7 @@ public class DoudizhuBeishu {
 	}
 
 	public boolean hasDanwang() {
-		return dipaihasDawang || (renshu == 2 && dipaihasXiaowang);
+		return !hasShuangwang() && (dipaihasDawang || (renshu == 2 && dipaihasXiaowang));
 	}
 
 	public boolean hasShuangwang() {

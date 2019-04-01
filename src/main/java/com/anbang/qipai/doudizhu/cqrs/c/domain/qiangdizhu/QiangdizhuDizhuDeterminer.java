@@ -173,17 +173,21 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			if (pid.equals(playerId)) {
 				playerQiangdizhuMap.put(playerId, node.getState());
 			} else {
-				if (node.getState().equals(PlayerQiangdizhuState.bujiao)) {
-					if (pid.equals(nextPlayerId)) {
-						playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startJiaodizhu);
-					} else {
-						playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForJiaodizhu);
-					}
+				if (node.getDizhuId() != null) {
+					playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.over);
 				} else {
-					if (pid.equals(nextPlayerId)) {
-						playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startQiangdizhu);
+					if (node.getState().equals(PlayerQiangdizhuState.bujiao)) {
+						if (pid.equals(nextPlayerId)) {
+							playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startJiaodizhu);
+						} else {
+							playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForJiaodizhu);
+						}
 					} else {
-						playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForQiangdizhu);
+						if (pid.equals(nextPlayerId)) {
+							playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.startQiangdizhu);
+						} else {
+							playerQiangdizhuMap.put(pid, PlayerQiangdizhuState.waitForQiangdizhu);
+						}
 					}
 				}
 			}
