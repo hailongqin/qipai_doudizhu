@@ -15,7 +15,6 @@ public class PukeHistoricalJuResult {
 	private int panshu;
 	private int lastPanNo;
 	private List<DoudizhuJuPlayerResultMO> playerResultList;
-
 	private PanResultVO lastPanResult;
 	private long finishTime;
 

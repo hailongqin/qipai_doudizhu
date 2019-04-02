@@ -126,7 +126,7 @@ public class PukeGame extends FixedPlayersMultipanAndVotetofinishGame {
 		if (szfbxp) {
 			ju.setLuanPaiStrategyForNextPan(new LastPanChuPaiOrdinalLuanpaiStrategy());
 		} else {
-			ju.setLuanPaiStrategyForNextPan(new RandomLuanPaiStrategy(startTime));
+			ju.setLuanPaiStrategyForNextPan(new RandomLuanPaiStrategy(startTime + 1));
 		}
 		OnePlayerShiqizhangpaiFaPaiStrategy onePlayerShiqizhangpaiFaPaiStrategy = new OnePlayerShiqizhangpaiFaPaiStrategy(
 				renshu, qxp, szfbxp);

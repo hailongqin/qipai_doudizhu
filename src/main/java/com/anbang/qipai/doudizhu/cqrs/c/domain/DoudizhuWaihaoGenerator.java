@@ -5,6 +5,7 @@ import com.dml.doudizhu.pai.dianshuzu.HuojianDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaierDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SandaiyiDianShuZu;
 import com.dml.doudizhu.pai.dianshuzu.SidaierDianShuZu;
+import com.dml.doudizhu.pai.dianshuzu.SidaiyiDianShuZu;
 import com.dml.doudizhu.pai.waihao.WaihaoGenerator;
 import com.dml.puke.pai.DianShu;
 import com.dml.puke.wanfa.dianshu.dianshuzu.DanGeZhadanDianShuZu;
@@ -62,6 +63,9 @@ public class DoudizhuWaihaoGenerator implements WaihaoGenerator {
 			dianShuZuPaiZu.setWaihao("sandaier");
 		}
 		// 四带二
+		if (dianShuZu instanceof SidaiyiDianShuZu) {
+			dianShuZuPaiZu.setWaihao("sidaier");
+		}
 		if (dianShuZu instanceof SidaierDianShuZu) {
 			dianShuZuPaiZu.setWaihao("sidaier");
 		}

@@ -298,7 +298,7 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			if (dianshuZu instanceof DuiziDianShuZu) {
 				DuiziDianShuZu duiziDianShuZu = (DuiziDianShuZu) dianshuZu;
 				DianShu dianshu = duiziDianShuZu.getDianShu();
-				if (dianshuCountArray[dianshu.ordinal()] == 2) {
+				if (dianshuCountArray[dianshu.ordinal()] > 1 && dianshuCountArray[dianshu.ordinal()] < 4) {
 					if (duiziSolutionList.isEmpty()) {
 						duiziSolutionList.add(solution);
 					} else {
