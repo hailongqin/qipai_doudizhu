@@ -29,6 +29,9 @@ public class RangpaiCurrentPanFinishiDeterminer implements CurrentPanFinishiDete
 			} else {
 				if (currentPan.getDoudizhuPlayerIdPlayerMap().size() == 2) {
 					int rangpai = qiangdizhuCount - 1 > 4 ? 4 : qiangdizhuCount - 1;
+					if (rangpai < 0) {
+						rangpai = 0;
+					}
 					if (player.getAllShoupai().size() <= rangpai) {
 						currentPan.setYingjiaPlayerId(player.getId());
 						return true;
