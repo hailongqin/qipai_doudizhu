@@ -139,7 +139,7 @@ public class QiangdizhuDizhuDeterminer implements DizhuDeterminer {
 			rightChildren.getRightChildren().getLeftChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
 					currentPan.playerIdForPosition(Position.xi));
 			// 3-8
-			rightChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbuqiang,
+			rightChildren.getRightChildren().createRightChildren(PlayerQiangdizhuState.afterbujiao,
 					currentPan.playerIdForPosition(Position.dong));
 		} else {
 
