@@ -322,7 +322,9 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 			if (dianshuZu instanceof DanzhangDianShuZu) {
 				DanzhangDianShuZu danzhangDianShuZu = (DanzhangDianShuZu) dianshuZu;
 				DianShu dianshu = danzhangDianShuZu.getDianShu();
-				if ((dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang))
+				if (dianshuCountArray[dianshu.ordinal()] != 1) {
+
+				} else if ((dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang))
 						&& (dianshuCountArray[13] == 1 && dianshuCountArray[14] == 1)) {// 有火箭
 				} else {
 					if (danzhangSolutionList.isEmpty()) {

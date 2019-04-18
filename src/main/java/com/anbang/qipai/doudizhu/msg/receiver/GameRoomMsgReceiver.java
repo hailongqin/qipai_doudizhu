@@ -9,9 +9,17 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.anbang.qipai.doudizhu.cqrs.c.domain.PukeGameValueObject;
 import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.JuResultDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGameDbo;
+import com.anbang.qipai.doudizhu.cqrs.q.dbo.PukeGamePlayerDbo;
 import com.anbang.qipai.doudizhu.cqrs.q.service.PukeGameQueryService;
+import com.anbang.qipai.doudizhu.cqrs.q.service.PukePlayQueryService;
 import com.anbang.qipai.doudizhu.msg.channel.GameRoomSink;
 import com.anbang.qipai.doudizhu.msg.msjobj.CommonMO;
+import com.anbang.qipai.doudizhu.msg.msjobj.PukeHistoricalJuResult;
+import com.anbang.qipai.doudizhu.msg.service.DoudizhuGameMsgService;
+import com.anbang.qipai.doudizhu.msg.service.DoudizhuResultMsgService;
+import com.dml.mpgame.game.player.GamePlayerOnlineState;
 import com.google.gson.Gson;
 
 @EnableBinding(GameRoomSink.class)
@@ -23,6 +31,15 @@ public class GameRoomMsgReceiver {
 	@Autowired
 	private PukeGameQueryService pukeGameQueryService;
 
+	@Autowired
+	private PukePlayQueryService pukePlayQueryService;
+
+	@Autowired
+	private DoudizhuResultMsgService doudizhuResultMsgService;
+
+	@Autowired
+	private DoudizhuGameMsgService doudizhuGameMsgService;
+
 	private Gson gson = new Gson();
 
 	@StreamListener(GameRoomSink.DOUDIZHUGAMEROOM)
@@ -32,11 +49,26 @@ public class GameRoomMsgReceiver {
 		if ("gameIds".equals(msg)) {
 			List<String> gameIds = gson.fromJson(json, ArrayList.class);
 			for (String gameId : gameIds) {
-				PukeGameValueObject gameValueObject;
 				try {
-					gameValueObject = gameCmdService.finishGameImmediately(gameId);
-					pukeGameQueryService.finishGameImmediately(gameValueObject);
-				} catch (Exception e) {
+					PukeGameDbo pukeGameDbo = pukeGameQueryService.findPukeGameDboById(gameId);
+					boolean playerOnline = false;
+					for (PukeGamePlayerDbo player : pukeGameDbo.getPlayers()) {
+						if (GamePlayerOnlineState.online.equals(player.getOnlineState())) {
+							playerOnline = true;
+						}
+					}
+					if (playerOnline) {
+						doudizhuGameMsgService.delay(gameId);
+					} else {
+						PukeGameValueObject gameValueObject = gameCmdService.finishGameImmediately(gameId);
+						pukeGameQueryService.finishGameImmediately(gameValueObject);
+						JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+						PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+						doudizhuResultMsgService.recordJuResult(juResult);
+						doudizhuGameMsgService.gameFinished(gameId);
+					}
+				} catch (Throwable e) {
+					e.printStackTrace();
 				}
 			}
 		}

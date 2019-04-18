@@ -37,6 +37,12 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 		List<DaPaiDianShuSolution> filtedSolutionList = new LinkedList<>();
 		LinkedList<DaPaiDianShuSolution> danzhangSolutionList = new LinkedList<>();
 		LinkedList<DaPaiDianShuSolution> duiziSolutionList = new LinkedList<>();
+		// 单张至两张的单张
+		LinkedList<DaPaiDianShuSolution> danzhangYiShangSolutionList = new LinkedList<>();
+		// 两张以上的单张
+		LinkedList<DaPaiDianShuSolution> danzhangDuiziYiShangSolutionList = new LinkedList<>();
+		// 有三张的对子
+		LinkedList<DaPaiDianShuSolution> duiziYiShangSolutionList = new LinkedList<>();
 		LinkedList<DaPaiDianShuSolution> sanzhangSolutionList = new LinkedList<>();
 		LinkedList<DaPaiDianShuSolution> sandaiyiSolutionList = new LinkedList<>();
 		LinkedList<DaPaiDianShuSolution> sandaierSolutionList = new LinkedList<>();
@@ -298,22 +304,42 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			if (dianshuZu instanceof DuiziDianShuZu) {
 				DuiziDianShuZu duiziDianShuZu = (DuiziDianShuZu) dianshuZu;
 				DianShu dianshu = duiziDianShuZu.getDianShu();
-				if (dianshuCountArray[dianshu.ordinal()] > 1 && dianshuCountArray[dianshu.ordinal()] < 4) {
-					if (duiziSolutionList.isEmpty()) {
-						duiziSolutionList.add(solution);
+				if (dianshuCountArray[dianshu.ordinal()] < 4) {
+					if (dianshuCountArray[dianshu.ordinal()] > 2) {
+						if (duiziYiShangSolutionList.isEmpty()) {
+							duiziYiShangSolutionList.add(solution);
+						} else {
+							int length1 = duiziYiShangSolutionList.size();
+							int j = 0;
+							while (j < length1) {
+								if (((DuiziDianShuZu) duiziYiShangSolutionList.get(j).getDianShuZu()).getDianShu()
+										.compareTo(duiziDianShuZu.getDianShu()) > 0) {
+									duiziYiShangSolutionList.add(j, solution);
+									break;
+								}
+								if (j == length1 - 1) {
+									duiziYiShangSolutionList.add(solution);
+								}
+								j++;
+							}
+						}
 					} else {
-						int length = duiziSolutionList.size();
-						int i = 0;
-						while (i < length) {
-							if (((DuiziDianShuZu) duiziSolutionList.get(i).getDianShuZu()).getDianShu()
-									.compareTo(duiziDianShuZu.getDianShu()) > 0) {
-								duiziSolutionList.add(i, solution);
-								break;
+						if (duiziSolutionList.isEmpty()) {
+							duiziSolutionList.add(solution);
+						} else {
+							int length = duiziSolutionList.size();
+							int i = 0;
+							while (i < length) {
+								if (((DuiziDianShuZu) duiziSolutionList.get(i).getDianShuZu()).getDianShu()
+										.compareTo(duiziDianShuZu.getDianShu()) > 0) {
+									duiziSolutionList.add(i, solution);
+									break;
+								}
+								if (i == length - 1) {
+									duiziSolutionList.add(solution);
+								}
+								i++;
 							}
-							if (i == length - 1) {
-								duiziSolutionList.add(solution);
-							}
-							i++;
 						}
 					}
 				}
@@ -322,24 +348,65 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			if (dianshuZu instanceof DanzhangDianShuZu) {
 				DanzhangDianShuZu danzhangDianShuZu = (DanzhangDianShuZu) dianshuZu;
 				DianShu dianshu = danzhangDianShuZu.getDianShu();
-				if ((dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang))
-						&& (dianshuCountArray[13] == 1 && dianshuCountArray[14] == 1)) {// 有火箭
-				} else {
-					if (danzhangSolutionList.isEmpty()) {
-						danzhangSolutionList.add(solution);
+				if (dianshuCountArray[dianshu.ordinal()] < 4) {
+					if (dianshuCountArray[dianshu.ordinal()] > 2) {
+						if (danzhangDuiziYiShangSolutionList.isEmpty()) {
+							danzhangDuiziYiShangSolutionList.add(solution);
+						} else {
+							int length1 = danzhangDuiziYiShangSolutionList.size();
+							int j = 0;
+							while (j < length1) {
+								if (((DanzhangDianShuZu) danzhangDuiziYiShangSolutionList.get(j).getDianShuZu())
+										.getDianShu().compareTo(danzhangDianShuZu.getDianShu()) > 0) {
+
+									danzhangDuiziYiShangSolutionList.add(j, solution);
+									break;
+								}
+								if (j == length1 - 1) {
+									danzhangDuiziYiShangSolutionList.add(solution);
+								}
+								j++;
+							}
+						}
+					} else if (dianshuCountArray[dianshu.ordinal()] > 1) {
+						if (danzhangYiShangSolutionList.isEmpty()) {
+							danzhangYiShangSolutionList.add(solution);
+						} else {
+							int length1 = danzhangYiShangSolutionList.size();
+							int j = 0;
+							while (j < length1) {
+								if (((DanzhangDianShuZu) danzhangYiShangSolutionList.get(j).getDianShuZu()).getDianShu()
+										.compareTo(danzhangDianShuZu.getDianShu()) > 0) {
+									danzhangYiShangSolutionList.add(j, solution);
+									break;
+								}
+								if (j == length1 - 1) {
+									danzhangYiShangSolutionList.add(solution);
+								}
+								j++;
+							}
+						}
 					} else {
-						int length = danzhangSolutionList.size();
-						int i = 0;
-						while (i < length) {
-							if (((DanzhangDianShuZu) danzhangSolutionList.get(i).getDianShuZu()).getDianShu()
-									.compareTo(danzhangDianShuZu.getDianShu()) > 0) {
-								danzhangSolutionList.add(i, solution);
-								break;
-							}
-							if (i == length - 1) {
+						if ((dianshu.equals(DianShu.xiaowang) || dianshu.equals(DianShu.dawang))
+								&& (dianshuCountArray[13] == 1 && dianshuCountArray[14] == 1)) {// 有火箭
+						} else {
+							if (danzhangSolutionList.isEmpty()) {
 								danzhangSolutionList.add(solution);
+							} else {
+								int length = danzhangSolutionList.size();
+								int i = 0;
+								while (i < length) {
+									if (((DanzhangDianShuZu) danzhangSolutionList.get(i).getDianShuZu()).getDianShu()
+											.compareTo(danzhangDianShuZu.getDianShu()) > 0) {
+										danzhangSolutionList.add(i, solution);
+										break;
+									}
+									if (i == length - 1) {
+										danzhangSolutionList.add(solution);
+									}
+									i++;
+								}
 							}
-							i++;
 						}
 					}
 				}
@@ -461,7 +528,10 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			}
 		}
 		filtedSolutionList.addAll(danzhangSolutionList);
+		filtedSolutionList.addAll(danzhangYiShangSolutionList);
+		filtedSolutionList.addAll(danzhangDuiziYiShangSolutionList);
 		filtedSolutionList.addAll(duiziSolutionList);
+		filtedSolutionList.addAll(duiziYiShangSolutionList);
 		filtedSolutionList.addAll(sanzhangSolutionList);
 		filtedSolutionList.addAll(sandaiyiSolutionList);
 		filtedSolutionList.addAll(sandaierSolutionList);
