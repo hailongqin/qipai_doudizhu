@@ -62,10 +62,12 @@ public class GameRoomMsgReceiver {
 					} else {
 						PukeGameValueObject gameValueObject = gameCmdService.finishGameImmediately(gameId);
 						pukeGameQueryService.finishGameImmediately(gameValueObject);
-						JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
-						PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
-						doudizhuResultMsgService.recordJuResult(juResult);
 						doudizhuGameMsgService.gameFinished(gameId);
+						JuResultDbo juResultDbo = pukePlayQueryService.findJuResultDbo(gameId);
+						if (juResultDbo != null) {
+							PukeHistoricalJuResult juResult = new PukeHistoricalJuResult(juResultDbo, pukeGameDbo);
+							doudizhuResultMsgService.recordJuResult(juResult);
+						}
 					}
 				} catch (Throwable e) {
 					e.printStackTrace();
