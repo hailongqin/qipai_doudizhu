@@ -151,8 +151,9 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			// 四带二对子
 			if (dianshuZu instanceof SidaierDianShuZu) {
 				SidaierDianShuZu sidaierDianShuZu = (SidaierDianShuZu) dianshuZu;
-				DianShu dianshu = sidaierDianShuZu.getDianshu();
-				if (dianshuCountArray[dianshu.ordinal()] == 3) {
+				DianShu chibang = sidaierDianShuZu.getChibang();
+				DianShu chibanger = sidaierDianShuZu.getChibanger();
+				if (dianshuCountArray[chibang.ordinal()] < 4 && dianshuCountArray[chibanger.ordinal()] < 4) {
 					if (sidaierSolutionList.isEmpty()) {
 						sidaierSolutionList.add(solution);
 					} else {
@@ -183,8 +184,9 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 			// 四带二单牌
 			if (dianshuZu instanceof SidaiyiDianShuZu) {
 				SidaiyiDianShuZu sidaiyiDianShuZu = (SidaiyiDianShuZu) dianshuZu;
-				DianShu dianshu = sidaiyiDianShuZu.getDianshu();
-				if (dianshuCountArray[dianshu.ordinal()] == 3) {
+				DianShu chibang = sidaiyiDianShuZu.getChibang();
+				DianShu chibanger = sidaiyiDianShuZu.getChibanger();
+				if (dianshuCountArray[chibang.ordinal()] < 4 && dianshuCountArray[chibanger.ordinal()] < 4) {
 					if (sidaiyiSolutionList.isEmpty()) {
 						sidaiyiSolutionList.add(solution);
 					} else {
