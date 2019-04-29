@@ -386,7 +386,7 @@ public class DoudizhuDaPaiSolutionsTipsFilter implements DaPaiSolutionsTipsFilte
 				DianShu[] lianXuDianShuArray = lianduiDianShuZu.getLianXuDianShuArray();
 				boolean allSuccess = true;
 				for (DianShu dianshu : lianXuDianShuArray) {
-					if (dianshuCountArray[dianshu.ordinal()] >= 4) {
+					if (dianshuCountArray[dianshu.ordinal()] == 4) {
 						allSuccess = false;
 						break;
 					}

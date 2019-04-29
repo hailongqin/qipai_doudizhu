@@ -419,7 +419,7 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 				DianShu[] lianXuDianShuArray = liansanzhangDianShuZu.getLianXuDianShuArray();
 				boolean allSuccess = true;
 				for (DianShu dianshu : lianXuDianShuArray) {
-					if (dianshuCountArray[dianshu.ordinal()] != 3) {
+					if (dianshuCountArray[dianshu.ordinal()] == 4) {
 						allSuccess = false;
 						break;
 					}
@@ -451,7 +451,7 @@ public class DoudizhuYaPaiSolutionsTipsFilter implements YaPaiSolutionsTipsFilte
 				DianShu[] lianXuDianShuArray = lianduiDianShuZu.getLianXuDianShuArray();
 				boolean allSuccess = true;
 				for (DianShu dianshu : lianXuDianShuArray) {
-					if (dianshuCountArray[dianshu.ordinal()] != 2) {
+					if (dianshuCountArray[dianshu.ordinal()] == 4) {
 						allSuccess = false;
 						break;
 					}

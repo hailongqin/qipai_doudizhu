@@ -65,7 +65,7 @@ public class DoudizhuAllKedaPaiSolutionsGenerator implements AllKedaPaiSolutions
 		});
 		// 顺子点数组
 		List<ShunziDianShuZu> shunziList = new ArrayList<>();
-		for (int length = 5; length < 12; length++) {// 顺子:五张或更多的连续单牌,不包括2与双王,如单5+单6+单7+单8+单9.
+		for (int length = 5; length < 13; length++) {// 顺子:五张或更多的连续单牌,不包括2与双王,如单5+单6+单7+单8+单9.
 			shunziList.addAll(DianShuZuGenerator.generateAllShunziDianShuZu(dianShuAmountArray, length));
 		}
 		List<DaPaiDianShuSolution> shunziSolution = DoudizhuSolutionGenerator
