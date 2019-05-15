@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
-import com.anbang.qipai.doudizhu.websocket.WatchQueryScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ import com.anbang.qipai.doudizhu.cqrs.c.domain.result.PukeActionResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.QiangdizhuResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.result.ReadyToNextPanResult;
 import com.anbang.qipai.doudizhu.cqrs.c.domain.state.Qiangdizhu;
+import com.anbang.qipai.doudizhu.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.doudizhu.cqrs.c.service.PukePlayCmdService;
 import com.anbang.qipai.doudizhu.cqrs.q.dbo.GameLatestInfoDbo;
@@ -39,6 +38,7 @@ import com.anbang.qipai.doudizhu.web.vo.PanActionFrameVO;
 import com.anbang.qipai.doudizhu.web.vo.PanResultVO;
 import com.anbang.qipai.doudizhu.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.doudizhu.websocket.QueryScope;
+import com.anbang.qipai.doudizhu.websocket.WatchQueryScope;
 import com.dml.doudizhu.pan.PanActionFrame;
 import com.dml.mpgame.game.player.GamePlayerOnlineState;
 
@@ -250,9 +250,10 @@ public class PukeController {
 		hintWatcher(pukeActionResult.getPukeGame().getId(), endFlag);
 
 		long endTime = System.currentTimeMillis();
-		logger.info("action:da," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "paiIds:" + paiIds
-				+ "," + "dianshuZuheIdx:" + dianshuZuheIdx + "," + "success:" + vo.isSuccess() + ",msg:" + vo.getMsg()
-				+ "," + "endTime:" + endTime + "," + "use:" + (endTime - startTime) + "ms");
+		logger.info("action:da," + "startTime:" + startTime + "," + "gameId:" + pukeActionResult.getPukeGame().getId()
+				+ "," + "playerId:" + playerId + "," + "paiIds:" + paiIds + "," + "dianshuZuheIdx:" + dianshuZuheIdx
+				+ "," + "success:" + vo.isSuccess() + ",msg:" + vo.getMsg() + "," + "endTime:" + endTime + "," + "use:"
+				+ (endTime - startTime) + "ms");
 		return vo;
 	}
 
@@ -309,9 +310,9 @@ public class PukeController {
 		hintWatcher(pukeActionResult.getPukeGame().getId(), "query");
 
 		long endTime = System.currentTimeMillis();
-		logger.info("action:guo," + "startTime:" + startTime + "," + "playerId:" + playerId + "," + "success:"
-				+ vo.isSuccess() + ",msg:" + vo.getMsg() + "," + "endTime:" + endTime + "," + "use:"
-				+ (endTime - startTime) + "ms");
+		logger.info("action:guo," + "startTime:" + startTime + "," + "gameId:" + pukeActionResult.getPukeGame().getId()
+				+ "," + "playerId:" + playerId + "," + "success:" + vo.isSuccess() + ",msg:" + vo.getMsg() + ","
+				+ "endTime:" + endTime + "," + "use:" + (endTime - startTime) + "ms");
 		return vo;
 	}
 
